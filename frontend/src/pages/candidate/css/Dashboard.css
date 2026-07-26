@@ -1,0 +1,223 @@
+/* frontend/src/pages/candidate/css/Dashboard.css */
+
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(135deg, #e0f2fe 0%, #d1fae5 100%);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    overflow: hidden;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 80px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    z-index: 10;
+}
+
+.sidebar-logo {
+    width: 40px;
+    margin-bottom: 40px;
+}
+
+.nav-item {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+    font-size: 1.2em;
+}
+
+.nav-item:hover {
+    background-color: #f0fdf4;
+    color: #2563eb;
+}
+
+.nav-item.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-left: 3px solid #2563eb;
+}
+
+.spacer { flex: 1; }
+
+/* Main Content Area */
+.dashboard-main {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 1.8em;
+    margin: 0 0 5px 0;
+    color: #111;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: #666;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* Card Styling */
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+}
+
+.card h2 {
+    font-size: 1.2em;
+    margin: 0 0 20px 0;
+    color: #333;
+}
+
+/* Active Exams Section */
+.exam-list {
+    display: flex;
+    gap: 20px;
+}
+
+.exam-item {
+    flex: 1;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.exam-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.exam-header img {
+    width: 30px;
+}
+
+.exam-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.status-badge {
+    font-size: 0.8em;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.status-in-progress { background-color: #fef3c7; color: #d97706; }
+.status-scheduled { background-color: #e0f2fe; color: #0284c7; }
+
+.btn-primary, .btn-secondary {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.btn-primary { background-color: #2563eb; color: white; }
+.btn-secondary { background-color: #eff6ff; color: #2563eb; }
+
+/* Results Table */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-table th, .results-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.results-table th {
+    color: #666;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.pass-badge {
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+/* Right Column Widgets */
+.certificate-badge {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+}
+
+.certificate-badge img { width: 40px; }
+
+.verify-input {
+    display: flex;
+    margin-top: 15px;
+}
+
+.verify-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+}
+
+.verify-input button {
+    padding: 10px 15px;
+    background-color: #0d9488;
+    border: none;
+    color: white;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: #fffbeb;
+    border-left: 4px solid #fbbf24;
+    border-radius: 8px;
+}
