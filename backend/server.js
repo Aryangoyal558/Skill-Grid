@@ -1,4 +1,4 @@
-require('dotenv').configure();
+require('dotenv').config();
 
 const express= require('express');
 const cors= require('cors');
@@ -20,7 +20,7 @@ app.get('/',(req,res)=>{
     res.send("Page under process...");
 });
 
-mongoDb()
+mongoDb(mongo_url)
     .then(()=>console.log("Database is running..."))
     .catch((err)=>console.log("Error occurs..."));
 

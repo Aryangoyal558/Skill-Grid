@@ -14,7 +14,7 @@ const userSchema= new mongoose.Schema({
     },
     password:{
         type:String,
-        requird:true,
+        required:true,
         minlength:6
     },
     role:{
@@ -24,9 +24,6 @@ const userSchema= new mongoose.Schema({
     },
     phone_no:{
         type:Number,
-        unique:true,
-        minlength:6000000000,
-        maxlength:9999999999
     }
 },{timestamps:true});
 

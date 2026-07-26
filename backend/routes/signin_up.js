@@ -1,18 +1,19 @@
 const express= require('express');
+const User= require('../models/user');
 
 const router=express.Router();
 
 router.post('/signup',async(req,res)=>{
-    const {name,email,password,con_pass,role,phone_no}= req.body;
-    if(!name||!email||!password||!con_pass) return res.status(400).json({message:"All data fiels required..."});
-    if(password!==con_pass) return res.status(401).json({message:"Password should be same as Confirm Password"});
+    const {fullname,email,password,confirmPassword,roles}= req.body;
+    console.log({roles});
+    if(!fullname||!email||!password||!confirmPassword) return res.status(400).json({message:"All data fiels required..."});
+    if(password!==confirmPassword) return res.status(401).json({message:"Password should be same as Confirm Password"});
     try{
         await User.create({
-            name,
+            name:fullname,
             email,
             password,
-            role,
-            phone_no
+            role:roles,
         });
         res.status(201).json({message:"User register Successfully"});
     }catch(err){
@@ -31,6 +32,8 @@ router.post('/login',async(req,res)=>{
         if(!user_info) return res.status(401).json({message:"Invalid Credentials..."});
         res.status(200).json({message:`${user_info.name} Welcome`});
     }catch(err){
-        res.status(500).json({message:err.message});
+        res.status(500).json({message: err.message});
     };
 });
+
+module.exports=router;
