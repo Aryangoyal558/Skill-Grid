@@ -5,10 +5,11 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "seed": "node seedData.js",
+    "test": "node tests/certificateModule.test.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -23,8 +24,8 @@
     "morgan": "^1.11.0",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.3",
-    "nodemon": "^3.1.14",
     "otp-generator": "^4.0.1",
+    "nodemon": "^3.1.14",
     "pdfkit": "^0.19.1",
     "qrcode": "^1.5.4",
     "uuid": "^14.0.1"

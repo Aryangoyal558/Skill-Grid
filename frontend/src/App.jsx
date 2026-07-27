@@ -109,6 +109,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import EmailVerification from "./pages/auth/EmailVerification";
+import CandidateDashboard from "./pages/candidate/Dashboard";
+import ExaminerDashboard from "./pages/examiner/Dashboard";
+import LiveAssessment from "./pages/candidate/LiveAssessment";
+import CreateAssessment from "./pages/examiner/CreateAssessment";
+import CertificateView from "./pages/candidate/CertificateView";
+import CertificateVerification from './pages/CertificateVerification';
+import ExaminerSubmissions from "./pages/examiner/Submissions";
+import UserManagement from "./pages/examiner/UserManagement";
 import VerifyOtp from "./pages/auth/VerifyOtp";
 import ResetPassword from "./pages/auth/ResetPassword";
 
@@ -141,6 +150,10 @@ function App() {
         {/* DEFAULT */}
 
         <Route path="/" element={<Navigate to="/login" replace />} />
+        
+        {/* Public Certificate Verification Routes */}
+        <Route path="/verify" element={<CertificateVerification />} />
+        <Route path="/verify/:certificateNumber" element={<CertificateVerification />} />
 
         {/* AUTH ROUTES */}
 
@@ -217,6 +230,20 @@ function App() {
 
         <Route path="/examiner/results/:id" element={<ViewResults />} />
 
+        
+        
+        
+        
+        <Route path="/verify-email" element={<EmailVerification />} />
+        
+        {/* Candidate Routes */}
+        <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+        <Route path="/candidate/assessment" element={<LiveAssessment />} />
+        <Route path="/candidate/certificate" element={<CertificateView />} />
+        
+        {/* Examiner Routes */}
+        <Route path="/examiner/dashboard" element={<ExaminerDashboard />} />
+        <Route path="/examiner/create-assessment" element={<CreateAssessment />} />
         <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />
 
         <Route path="/examiner/users" element={<UserManagement />} />
@@ -234,6 +261,9 @@ function App() {
 
         {/* FALLBACK */}
 
+        <Route path="/change-password" element={<ChangePassword />} />
+        
+        {/* Fallback for unknown routes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
