@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import "./css/ForgotPassword.css";
+=======
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './css/ForgotPassword.css';
+import logo from "../../assets/logo.png";
+>>>>>>> Pragya
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -21,8 +28,27 @@ const ForgotPassword = () => {
       alert(err.response?.data?.message || err.message);
     }
 
+<<<<<<< HEAD
     // Show success message to the user
   };
+=======
+    return (
+        <div className="forgot-password-page">
+            <div className="app-container">
+                {/* Header */}
+                <header className="platform-header">
+                    <div className="logo-container">
+                        <img 
+                            src={logo}
+                            alt="Ujwal Radiant Vision" 
+                            className="platform-logo" 
+                        />
+                        <div className="logo-text">
+                            <span className="platform-title">Online Skill Assessment and Digital Certification Platform</span>
+                        </div>
+                    </div>
+                </header>
+>>>>>>> Pragya
 
   return (
     <div className="forgot-password-page">

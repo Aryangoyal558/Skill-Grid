@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Login.css";
+import logo from "../../assets/logo.png";
+import stud from "../../assets/stud.png";
+import admi from "../../assets/admi.png";
+import examine from "../../assets/examine.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,12 +52,12 @@ const Login = () => {
           <div className="logo-container">
             {/* Placeholder URL for the logo */}
             <img
-              src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png"
+              src={logo}
               alt="Ujwal Radiant Vision"
               className="platform-logo"
             />
             <div className="logo-text">
-              <span className="company-name">UJWAL RADIANT VISION</span>
+              
               <span className="platform-title">
                 Online Skill Assessment and Digital Certification Platform
               </span>
@@ -76,7 +80,7 @@ const Login = () => {
                 onClick={() => setRole("candidate")}
               >
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  src={stud}
                   alt="Candidate"
                   className="role-icon"
                 />
@@ -92,7 +96,7 @@ const Login = () => {
                 onClick={() => setRole("examiner")}
               >
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/1945/1945120.png"
+                  src={examine}
                   alt="Examiner"
                   className="role-icon"
                 />
@@ -106,7 +110,7 @@ const Login = () => {
                 onClick={() => setRole("admin")}
               >
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/1484/1484831.png"
+                  src={admi}
                   alt="Administrator"
                   className="role-icon"
                 />
