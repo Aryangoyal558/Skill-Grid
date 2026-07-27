@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './css/ForgotPassword.css';
+import logo from "../../assets/logo.png";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -23,12 +24,11 @@ const ForgotPassword = () => {
                 <header className="platform-header">
                     <div className="logo-container">
                         <img 
-                            src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png" 
+                            src={logo}
                             alt="Ujwal Radiant Vision" 
                             className="platform-logo" 
                         />
                         <div className="logo-text">
-                            <span className="company-name">UJWAL RADIANT VISION</span>
                             <span className="platform-title">Online Skill Assessment and Digital Certification Platform</span>
                         </div>
                     </div>
