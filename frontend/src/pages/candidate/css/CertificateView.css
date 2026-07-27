@@ -1,0 +1,167 @@
+/* frontend/src/pages/candidate/css/CertificateView.css */
+
+.certificate-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    font-family: 'Poppins', sans-serif;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.action-bar {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.btn-back {
+    background-color: white;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background-color: #f8fafc;
+}
+
+.btn-download {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+    background-color: #1d4ed8;
+}
+
+/* The Certificate Itself */
+.certificate-container {
+    background-color: white;
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 1.414 / 1; /* Standard landscape paper ratio */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.certificate-border {
+    border: 10px solid #1e3a8a;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    position: relative;
+}
+
+.certificate-inner-border {
+    border: 2px solid #fbbf24;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.cert-logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.cert-header {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cert-subheader {
+    font-size: 1.2em;
+    color: #64748b;
+    margin-top: 5px;
+    margin-bottom: 40px;
+}
+
+.cert-text {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.cert-name {
+    font-size: 3em;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 5px;
+    font-family: 'Georgia', serif; /* Gives a classic certificate feel */
+}
+
+.cert-course {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #2563eb;
+    margin: 20px 0 40px 0;
+}
+
+.cert-footer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: auto;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+}
+
+.cert-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cert-signature img {
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.cert-meta {
+    font-size: 0.9em;
+    color: #64748b;
+    text-align: right;
+}
+
+.cert-seal {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+}
