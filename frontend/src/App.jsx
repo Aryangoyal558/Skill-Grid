@@ -12,6 +12,7 @@ import ExaminerDashboard from "./pages/examiner/Dashboard";
 import LiveAssessment from "./pages/candidate/LiveAssessment";
 import CreateAssessment from "./pages/examiner/CreateAssessment";
 import CertificateView from "./pages/candidate/CertificateView";
+import CertificateVerification from './pages/CertificateVerification';
 import ExaminerSubmissions from "./pages/examiner/Submissions";
 import UserManagement from "./pages/examiner/UserManagement";
 import VerifyOtp from "./pages/auth/VerifyOtp";
@@ -22,6 +23,10 @@ function App() {
       <Routes>
         {/* Default route redirects to Login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
+        
+        {/* Public Certificate Verification Routes */}
+        <Route path="/verify" element={<CertificateVerification />} />
+        <Route path="/verify/:certificateNumber" element={<CertificateVerification />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
@@ -29,16 +34,24 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        
+        
+        
+        
+        <Route path="/verify-email" element={<EmailVerification />} />
+        
+        {/* Candidate Routes */}
         <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-        <Route path="/examiner/dashboard" element={<ExaminerDashboard />} />
         <Route path="/candidate/assessment" element={<LiveAssessment />} />
-        <Route
-          path="/examiner/create-assessment"
-          element={<CreateAssessment />}
-        />
         <Route path="/candidate/certificate" element={<CertificateView />} />
+        
+        {/* Examiner Routes */}
+        <Route path="/examiner/dashboard" element={<ExaminerDashboard />} />
+        <Route path="/examiner/create-assessment" element={<CreateAssessment />} />
         <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />
         <Route path="/examiner/users" element={<UserManagement />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+        
         {/* Fallback for unknown routes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
