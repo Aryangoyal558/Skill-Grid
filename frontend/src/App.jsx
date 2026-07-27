@@ -13,7 +13,7 @@ import CreateAssessment from './pages/examiner/CreateAssessment';
 import CertificateView from './pages/candidate/CertificateView';
 import ExaminerSubmissions from './pages/examiner/Submissions';
 import UserManagement from './pages/examiner/UserManagement';
-
+import ChangePassword from './pages/auth/ChangePassword';
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +33,7 @@ function App() {
        <Route path="/candidate/certificate" element={<CertificateView />} />
        <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />
        <Route path="/examiner/users" element={<UserManagement />} />
+       <Route path="/change-password" element={<ChangePassword />} />
         {/* Fallback for unknown routes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
