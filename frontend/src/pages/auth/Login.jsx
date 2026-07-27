@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [role, setRole] = useState("candidate");
   const [formData, setFormData] = useState({
     email: "",
@@ -17,12 +18,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(import.meta.env.VITE_SERVER_LOGIN_URL, formData);
+    const user = await axios.post(
+      import.meta.env.VITE_SERVER_LOGIN_URL,
+      formData,
+      { withCredentials: true },
+    );
     setFormData({
       email: "",
       password: "",
     });
-    alert("User Logedin");
+    navigate("/candidate/dashboard", {
+      state: {
+        user_info: user.data.user_info,
+      },
+    });
   };
 
   const getRoleDisplayName = () => {

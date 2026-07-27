@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Register.css"; // Updated path based on your folder structure
 
@@ -15,6 +15,8 @@ const Register = () => {
     roles: "candidate",
     confirmPassword: "",
   });
+
+  const navigate = useNavigate();
 
   // 3. State for toggling password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +43,7 @@ const Register = () => {
         roles: "candidate",
         confirmPassword: "",
       });
+      navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || error.message);
     }
