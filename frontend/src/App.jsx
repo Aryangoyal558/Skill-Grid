@@ -50,7 +50,7 @@ function App() {
         <Route path="/examiner/create-assessment" element={<CreateAssessment />} />
         <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />
         <Route path="/examiner/users" element={<UserManagement />} />
-        <Route path="/change-password" element={<ChangePassword />} />
+        
         
         {/* Fallback for unknown routes */}
         <Route path="*" element={<Navigate to="/login" replace />} />
