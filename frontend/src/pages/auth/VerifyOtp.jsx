@@ -18,7 +18,7 @@ const VerifyOtp = () => {
     try {
       setLoading(true);
 
-      const verifyOtpUrl = import.meta.env.VITE_SERVER_VERIFY_OTP_URL || "http://localhost:5000/auth/verify-otp";
+      const verifyOtpUrl = import.meta.env.VITE_SERVER_VERIFY_OTP_URL || "http://localhost:8081/auth/verify-otp";
 
       const res = await axios.post(
         verifyOtpUrl,

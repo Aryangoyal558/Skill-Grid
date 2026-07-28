@@ -9,7 +9,7 @@ const CertificateVerification = () => {
     const [result, setResult] = useState(null);
     const [searched, setSearched] = useState(false);
 
-    const backendUrl = 'http://localhost:5000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8081';
 
     const verifyCertificate = async (idToVerify) => {
         const targetId = idToVerify || certNumberInput.trim();

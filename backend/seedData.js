@@ -7,7 +7,7 @@ const Attempt = require('./models/Attempt');
 const Certificate = require('./models/Certificate');
 const CertificateVerification = require('./models/CertificateVerification');
 
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/skillgrid';
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/skill_grid';
 
 async function seedData() {
     try {

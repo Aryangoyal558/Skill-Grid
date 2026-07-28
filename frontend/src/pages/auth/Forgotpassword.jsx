@@ -14,7 +14,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resetUrl = import.meta.env.VITE_SERVER_VERIFY_EMAIL_URL || "http://localhost:5000/auth/forget_pass";
+      const resetUrl = import.meta.env.VITE_SERVER_VERIFY_EMAIL_URL || "http://localhost:8081/auth/forget_pass";
       await axios.post(resetUrl, { email });
       console.log("Requesting password reset for:", email);
       alert("Email Verified");

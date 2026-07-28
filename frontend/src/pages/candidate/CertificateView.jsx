@@ -10,7 +10,7 @@ const CertificateView = () => {
     const [certificate, setCertificate] = useState(null);
     const [error, setError] = useState(null);
 
-    const backendUrl = 'http://localhost:5000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8081';
 
     useEffect(() => {
         if (!attemptId) {

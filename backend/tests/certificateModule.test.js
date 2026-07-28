@@ -11,7 +11,9 @@ const CertificateVerification = require('../models/CertificateVerification');
 const { generateCertificatePDF } = require('../services/pdfService');
 const certificateRoutes = require('../routes/certificateRoutes');
 
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/skillgrid_test';
+const mongoUri = process.env.MONGO_URI 
+    ? process.env.MONGO_URI.replace('skill_grid', 'skill_grid_test') 
+    : 'mongodb://localhost:27017/skill_grid_test';
 
 // Helper function to make HTTP GET request
 function makeGetRequest(url) {

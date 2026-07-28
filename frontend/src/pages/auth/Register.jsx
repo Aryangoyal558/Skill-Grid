@@ -62,7 +62,7 @@ const Register = () => {
     try {
       setLoading(true);
 
-      const signupUrl = import.meta.env.VITE_SERVER_SIGNUP_URL || "http://localhost:5000/auth/signup";
+      const signupUrl = import.meta.env.VITE_SERVER_SIGNUP_URL || "http://localhost:8081/auth/signup";
 
       const response = await axios.post(
         signupUrl,

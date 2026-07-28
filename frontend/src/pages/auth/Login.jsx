@@ -41,7 +41,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const loginUrl = import.meta.env.VITE_SERVER_LOGIN_URL || "http://localhost:5000/auth/login";
+      const loginUrl = import.meta.env.VITE_SERVER_LOGIN_URL || "http://localhost:8081/auth/login";
 
       const response = await axios.post(
         loginUrl,

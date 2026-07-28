@@ -42,9 +42,10 @@ router.get('/certificates/attempt/:attemptId', async (req, res) => {
         let certificate = await Certificate.findOne({ attemptId });
 
         if (certificate) {
-            const host = req.get('host') || 'localhost:5000';
+            const host = req.get('host') || `localhost:${process.env.PORT || 8081}`;
             const protocol = req.protocol || 'http';
             const baseUrl = `${protocol}://${host}`;
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
             return res.status(200).json({
                 success: true,
@@ -54,7 +55,7 @@ router.get('/certificates/attempt/:attemptId', async (req, res) => {
                     percentage: certificate.percentage
                 },
                 downloadUrl: `${baseUrl}/api/certificates/download/${certificate.certificateNumber}`,
-                verifyUrl: `${protocol}://${req.hostname || 'localhost'}:5173/verify/${certificate.certificateNumber}`
+                verifyUrl: `${frontendUrl}/verify/${certificate.certificateNumber}`
             });
         }
 
@@ -120,9 +121,10 @@ router.get('/certificates/attempt/:attemptId', async (req, res) => {
 
         await certificate.save();
 
-        const host = req.get('host') || 'localhost:5000';
+        const host = req.get('host') || `localhost:${process.env.PORT || 8081}`;
         const protocol = req.protocol || 'http';
         const baseUrl = `${protocol}://${host}`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
         return res.status(201).json({
             success: true,
@@ -132,7 +134,7 @@ router.get('/certificates/attempt/:attemptId', async (req, res) => {
                 percentage: certificate.percentage
             },
             downloadUrl: `${baseUrl}/api/certificates/download/${certificate.certificateNumber}`,
-            verifyUrl: `${protocol}://${req.hostname || 'localhost'}:5173/verify/${certificate.certificateNumber}`
+            verifyUrl: `${frontendUrl}/verify/${certificate.certificateNumber}`
         });
 
     } catch (error) {
@@ -162,8 +164,8 @@ router.get('/certificates/download/:certificateNumber', async (req, res) => {
             return res.status(403).send('This certificate has been revoked');
         }
 
-        const host = req.hostname || 'localhost';
-        const verifyUrl = `http://${host}:5173/verify/${certificate.certificateNumber}`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const verifyUrl = `${frontendUrl}/verify/${certificate.certificateNumber}`;
 
         const certData = {
             studentName: certificate.studentName,
@@ -298,7 +300,7 @@ router.post('/certificates/mock-seed', async (req, res) => {
         });
         await attempt.save();
 
-        const host = req.get('host') || 'localhost:5000';
+        const host = req.get('host') || `localhost:${process.env.PORT || 8081}`;
         const protocol = req.protocol || 'http';
         const baseUrl = `${protocol}://${host}`;
 
