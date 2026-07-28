@@ -33,18 +33,61 @@ const TakeAssessment = () => {
     return () => clearInterval(timer);
   }, [timeLeft, loading]);
 
+  // const loadQuestions = async () => {
+  //   try {
+  //     const res = await axios.get(
+  //       `http://localhost:8081/question/${assessmentId}`,
+  //       {
+  //         withCredentials: true,
+  //       },
+  //     );
+
+  //     setQuestions(res.data.questions);
+  //   } catch (err) {
+  //     alert(err.response?.data?.message || err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const loadQuestions = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:8081/question/${assessmentId}`,
+      const dummyQuestions = [
         {
-          withCredentials: true,
+          _id: "1",
+          question: "What is the output of 2 + 2?",
+          options: ["3", "4", "5", "6"],
         },
-      );
+        {
+          _id: "2",
+          question: "Which language is used for React?",
+          options: ["Python", "JavaScript", "Java", "C++"],
+        },
+        {
+          _id: "3",
+          question: "Which database is commonly used with Node.js?",
+          options: ["MongoDB", "Oracle", "MySQL", "PostgreSQL"],
+        },
+        {
+          _id: "4",
+          question: "What does CSS stand for?",
+          options: [
+            "Computer Style Sheet",
+            "Cascading Style Sheets",
+            "Creative Style System",
+            "Colorful Style Sheets",
+          ],
+        },
+        {
+          _id: "5",
+          question: "Which hook is used for side effects in React?",
+          options: ["useState", "useEffect", "useContext", "useReducer"],
+        },
+      ];
 
-      setQuestions(res.data.questions);
+      setQuestions(dummyQuestions);
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      alert(err.message);
     } finally {
       setLoading(false);
     }
@@ -118,75 +161,144 @@ const TakeAssessment = () => {
   }
 
   const question = questions[currentQuestion];
-
   return (
-    <div className="take-assessment">
-      <header className="exam-header">
-        <h2>Online Assessment</h2>
-
-        <div className="timer">⏰ {formatTime()}</div>
-      </header>
-
-      <div className="exam-body">
-        <aside className="question-palette">
-          <h3>Questions</h3>
-
-          <div className="palette-grid">
-            {questions.map((q, index) => (
-              <button
-                key={q._id}
-                className={
-                  currentQuestion === index
-                    ? "palette-btn active"
-                    : answers[q._id]
-                      ? "palette-btn answered"
-                      : "palette-btn"
-                }
-                onClick={() => setCurrentQuestion(index)}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        </aside>
-
-        <section className="question-section">
-          <h3>
-            Question {currentQuestion + 1} of {questions.length}
-          </h3>
-
-          <h2>{question.question}</h2>
-
-          <div className="options">
-            {question.options.map((option, index) => (
-              <label key={index} className="option">
-                <input
-                  type="radio"
-                  name={question._id}
-                  value={option}
-                  checked={answers[question._id] === option}
-                  onChange={() => handleAnswer(question._id, option)}
-                />
-
-                {option}
-              </label>
-            ))}
+    <div className="container-fluid py-4 bg-light min-vh-100">
+      {/* Header Card */}
+      <div className="card shadow-sm border-0 mb-4">
+        <div className="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h2 className="fw-bold mb-1">📝 Online Assessment</h2>
+            <p className="text-muted mb-0">
+              Complete all questions before time runs out
+            </p>
           </div>
 
-          <div className="navigation">
-            <button onClick={previousQuestion} disabled={currentQuestion === 0}>
-              Previous
-            </button>
-
-            {currentQuestion === questions.length - 1 ? (
-              <button className="submit-btn" onClick={submitExam}>
-                Submit Exam
-              </button>
-            ) : (
-              <button onClick={nextQuestion}>Next</button>
-            )}
+          <div className="badge bg-danger fs-5 px-4 py-3">
+            ⏰ {formatTime()}
           </div>
-        </section>
+        </div>
+      </div>
+
+      <div className="row g-4">
+        {/* Question Palette */}
+        <div className="col-lg-3 col-md-4">
+          <div className="card shadow-sm border-0 h-100">
+            <div className="card-header bg-primary text-white">
+              <h5 className="mb-0">Questions</h5>
+            </div>
+
+            <div className="card-body">
+              <div className="d-flex flex-wrap gap-2">
+                {questions.map((q, index) => (
+                  <button
+                    key={q._id}
+                    className={`btn rounded-circle 
+                    ${
+                      currentQuestion === index
+                        ? "btn-primary"
+                        : answers[q._id]
+                          ? "btn-success"
+                          : "btn-outline-secondary"
+                    }`}
+                    style={{
+                      width: "45px",
+                      height: "45px",
+                    }}
+                    onClick={() => setCurrentQuestion(index)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+
+              <hr />
+
+              <div className="small">
+                <p>
+                  <span className="badge bg-primary">Current</span>
+                </p>
+
+                <p>
+                  <span className="badge bg-success">Answered</span>
+                </p>
+
+                <p>
+                  <span className="badge bg-secondary">Not Attempted</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Question Section */}
+        <div className="col-lg-9 col-md-8">
+          <div className="card shadow border-0">
+            <div className="card-body p-4">
+              <div className="mb-4">
+                <span className="badge bg-dark fs-6">
+                  Question {currentQuestion + 1} / {questions.length}
+                </span>
+              </div>
+
+              <h3 className="fw-bold mb-4">{question.question}</h3>
+
+              <div className="d-flex flex-column gap-3">
+                {question.options.map((option, index) => (
+                  <label
+                    key={index}
+                    className={`card p-3 option-card 
+                    ${
+                      answers[question._id] === option
+                        ? "border-primary bg-primary-subtle"
+                        : ""
+                    }`}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name={question._id}
+                        value={option}
+                        checked={answers[question._id] === option}
+                        onChange={() => handleAnswer(question._id, option)}
+                      />
+
+                      <span className="ms-2">{option}</span>
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              {/* Navigation Buttons */}
+
+              <div className="d-flex justify-content-between mt-5">
+                <button
+                  className="btn btn-outline-secondary px-4"
+                  onClick={previousQuestion}
+                  disabled={currentQuestion === 0}
+                >
+                  ← Previous
+                </button>
+
+                {currentQuestion === questions.length - 1 ? (
+                  <button className="btn btn-success px-4" onClick={submitExam}>
+                    Submit Exam ✓
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary px-4"
+                    onClick={nextQuestion}
+                  >
+                    Next →
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
