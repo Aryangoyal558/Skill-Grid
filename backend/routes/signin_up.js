@@ -1,66 +1,13 @@
-const express= require('express');
-const User= require('../models/user');
+const express = require("express");
+const router = express.Router();
 
-const router=express.Router();
+const authController = require("../controllers/auth.controller");
 
-router.post('/signup',async(req,res)=>{
-    const {fullname,email,password,confirmPassword,roles}= req.body;
-    console.log({roles});
-    if(!fullname||!email||!password||!confirmPassword) return res.status(400).json({message:"All data fiels required..."});
-    if(password!==confirmPassword) return res.status(401).json({message:"Password should be same as Confirm Password"});
-    try{
-        await User.create({
-            name:fullname,
-            email,
-            password,
-            role:roles,
-        });
-        res.status(201).json({message:"User register Successfully"});
-    }catch(err){
-        return res.status(500).json({message:err.message});
-    };
-});
+router.post("/signup", authController.signup);
+router.post("/login", authController.login);
+router.post("/forget_pass", authController.forgetPassword);
+router.post("/verify-otp", authController.verifyOTP);
+router.post("/reset-password", authController.resetPassword);
+router.post("/logout", authController.logout);
 
-router.post('/login',async(req,res)=>{
-    const {email,password}=req.body;
-    if(!email||!password) return res.status(400).json({message:"All data fields required..."});
-    try{
-        const user_info=await User.findOne({
-            email,
-            password
-        });
-        if(!user_info) return res.status(401).json({message:"Invalid Credentials..."});
-        res.status(200).json({message:`${user_info.name} Welcome` ,user_info});
-    }catch(err){
-        res.status(500).json({message: err.message});
-    };
-});
-
-router.post('/forget_pass',async(req,res)=>{
-    const {email}=req.body;
-    if(!email) return res.status(400).json({message:"Email required"});
-    try{
-        const user_info=await User.findOne({
-            email
-        });
-        if(!user_info) return res.status(401).json({message:"Invalid Credential..."});
-        res.status(200).json({message:"Email Verified"});
-    }catch(err){
-        res.status(500).json({message: err.message});
-    };
-});
-
-router.post('/change_pass',async (req,res)=>{
-    const {email,password,confirmPassword}=req.body;
-    if(!email||!password||!confirmPassword) return res.status(400).json({message:"All credentials required"});
-    if(password!==confirmPassword) return res.status(401).json({message:"Password should be same as Confirm Password"});
-    try{
-        const user_info=await User.findOneAndUpdate({email},{$set:{password}},{new:true});
-        if(!user_info) return res.status(404).json({message:"Invalid Credentials"});
-        res.status(201).json({message:"Changed Successfully"});
-    }catch(err){
-        res.status(500).json({message:err.message});
-    }
-});
-
-module.exports=router;
+module.exports = router;

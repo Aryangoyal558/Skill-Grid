@@ -17,7 +17,9 @@ const ForgotPassword = () => {
       await axios.post(import.meta.env.VITE_SERVER_VERIFY_EMAIL_URL, { email });
       console.log("Requesting password reset for:", email);
       alert("Email Verified");
-      navigate("/change-password", { state: { email } });
+      navigate("/verify-otp", {
+        state: { email },
+      });
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     }

@@ -1,29 +1,28 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // ==========================================
 // 1. IMPORT AUTHENTICATION PAGES
 // ==========================================
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import EmailVerification from './pages/auth/EmailVerification';
-import ChangePassword from './pages/auth/ChangePassword';
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import EmailVerification from "./pages/auth/EmailVerification";
 
 // ==========================================
 // 2. IMPORT CANDIDATE (STUDENT) PAGES
 // ==========================================
-import CandidateDashboard from './pages/candidate/Dashboard';
-import LiveAssessment from './pages/candidate/LiveAssessment';
-import CertificateView from './pages/candidate/CertificateView';
+import CandidateDashboard from "./pages/candidate/Dashboard";
+import LiveAssessment from "./pages/candidate/LiveAssessment";
+import CertificateView from "./pages/candidate/CertificateView";
 
 // ==========================================
 // 3. IMPORT EXAMINER (ADMIN) PAGES
 // ==========================================
-import ExaminerDashboard from './pages/examiner/Dashboard';
-import CreateAssessment from './pages/examiner/CreateAssessment';
-import Submissions from './pages/examiner/Submissions';
-import UserManagement from './pages/examiner/UserManagement';
+import ExaminerDashboard from "./pages/examiner/Dashboard";
+import CreateAssessment from "./pages/examiner/CreateAssessment";
+import Submissions from "./pages/examiner/Submissions";
+import UserManagement from "./pages/examiner/UserManagement";
 
 function App() {
   return (
@@ -38,8 +37,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-email" element={<EmailVerification />} />
-        <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* ------------------------------------------ */}
         {/* CANDIDATE ROUTES                           */}
@@ -52,7 +51,10 @@ function App() {
         {/* EXAMINER ROUTES                            */}
         {/* ------------------------------------------ */}
         <Route path="/examiner/dashboard" element={<ExaminerDashboard />} />
-        <Route path="/examiner/create-assessment" element={<CreateAssessment />} />
+        <Route
+          path="/examiner/create-assessment"
+          element={<CreateAssessment />}
+        />
         <Route path="/examiner/submissions" element={<Submissions />} />
         <Route path="/examiner/users" element={<UserManagement />} />
 
@@ -61,7 +63,6 @@ function App() {
         {/* ------------------------------------------ */}
         {/* If a user types a URL that doesn't exist (like /abcd), send them back to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-        
       </Routes>
     </BrowserRouter>
   );

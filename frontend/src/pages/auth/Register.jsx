@@ -1,62 +1,106 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./css/Register.css"; // Updated path based on your folder structure
+
+import "./css/Register.css";
 
 const Register = () => {
-  // 1. State for handling the selected role
+  const navigate = useNavigate();
+
   const [role, setRole] = useState("candidate");
 
-  // 2. State for handling form inputs
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
     password: "",
-    roles: "candidate",
     confirmPassword: "",
+    roles: "candidate",
   });
 
-  const navigate = useNavigate();
-
-  // 3. State for toggling password visibility
   const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Handle input typing
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  // Handle form submission
+  const handleRoleChange = (selectedRole) => {
+    setRole(selectedRole);
+
+    setFormData((prev) => ({
+      ...prev,
+      roles: selectedRole,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !formData.fullname ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      return alert("All fields are required.");
+    }
+
+    if (formData.password.length < 6) {
+      return alert("Password must contain at least 6 characters.");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      return alert("Passwords do not match.");
+    }
+
     try {
-      if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-      await axios.post(import.meta.env.VITE_SERVER_SIGNUP_URL, formData);
+      setLoading(true);
+
+      const response = await axios.post(
+        import.meta.env.VITE_SERVER_SIGNUP_URL,
+        formData,
+        {
+          withCredentials: true,
+        },
+      );
+
+      alert(response.data.message);
+
       setFormData({
         fullname: "",
         email: "",
         password: "",
-        roles: "candidate",
         confirmPassword: "",
+        roles: "candidate",
       });
+
+      setRole("candidate");
+
       navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || error.message);
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
     }
-    alert("Saved Successfully");
-    console.log("Submitting Register for:", { role, ...formData });
-    // Axios POST request will go here eventually
   };
 
-  // Helper to format the role name for the title
   const getRoleDisplayName = () => {
-    if (role === "candidate") return "Candidate";
-    if (role === "examiner") return "Examiner";
-    return "Administrator";
+    switch (role) {
+      case "candidate":
+        return "Candidate";
+      case "examiner":
+        return "Examiner";
+      case "admin":
+        return "Administrator";
+      default:
+        return "Candidate";
+    }
   };
 
   return (
@@ -65,6 +109,7 @@ const Register = () => {
         <div className="logo-container">
           <div className="logo-text">
             <span className="company-name">UJWAL RADIANT VISION</span>
+
             <span className="platform-title">
               Online Skill Assessment and Digital Certification Platform
             </span>
@@ -75,45 +120,43 @@ const Register = () => {
       <div className="main-container">
         <div className="content-box">
           <h2>Welcome to Ujwal Radiant Vision</h2>
+
           <p className="subtitle">
             Choose your role to access your personalized dashboard.
           </p>
 
           <div className="role-cards">
-            {/* Candidate Card */}
+            {/* Candidate */}
+
             <div
               className={`role-card ${role === "candidate" ? "selected" : ""}`}
-              onClick={() => {
-                setRole("candidate");
-                setFormData({ ...formData, roles: "candidate" });
-              }}
+              onClick={() => handleRoleChange("candidate")}
             >
               <h3>CANDIDATE (Student)</h3>
-              <p>Access assessments, track progress, and view certificates.</p>
+
+              <p>Access assessments, track progress and certificates.</p>
             </div>
 
-            {/* Examiner Card */}
+            {/* Examiner */}
+
             <div
               className={`role-card ${role === "examiner" ? "selected" : ""}`}
-              onClick={() => {
-                setRole("examiner");
-                setFormData({ ...formData, roles: "examiner" });
-              }}
+              onClick={() => handleRoleChange("examiner")}
             >
               <h3>EXAMINER</h3>
-              <p>Create and manage assessments, grade submissions.</p>
+
+              <p>Create assessments and evaluate students.</p>
             </div>
 
-            {/* Admin Card */}
+            {/* Admin */}
+
             <div
               className={`role-card ${role === "admin" ? "selected" : ""}`}
-              onClick={() => {
-                setRole("admin");
-                setFormData({ ...formData, roles: "admin" });
-              }}
+              onClick={() => handleRoleChange("admin")}
             >
               <h3>ADMINISTRATOR</h3>
-              <p>Manage platform settings, users, and overall operations.</p>
+
+              <p>Manage users and platform settings.</p>
             </div>
           </div>
 
@@ -138,7 +181,7 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
-                  placeholder="Email address"
+                  placeholder="Email Address"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -154,6 +197,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                 />
+
                 <button
                   type="button"
                   className="password-toggle"
@@ -172,6 +216,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                 />
+
                 <button
                   type="button"
                   className="password-toggle"
@@ -182,15 +227,20 @@ const Register = () => {
               </div>
 
               <p className="terms-text">
-                By signing up, you agree to our Terms and Conditions.
+                By signing up you agree to our Terms & Conditions.
               </p>
 
-              <button type="submit" className="action-btn signup-btn">
-                SIGN UP
+              <button
+                type="submit"
+                className="action-btn signup-btn"
+                disabled={loading}
+              >
+                {loading ? "Creating Account..." : "SIGN UP"}
               </button>
 
               <div className="register-link">
-                Already have an account? <Link to="/login">Login here.</Link>
+                Already have an account?
+                <Link to="/login"> Login here.</Link>
               </div>
             </form>
           </div>

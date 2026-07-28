@@ -1,5 +1,14 @@
 const mongoose= require('mongoose');
 
+const educationSchema=new mongoose.Schema({
+    degree:String,
+    institute:String,
+    specialization:String,
+    cgpa:Number,
+    startYear:Number,
+    endYear:Number,
+},{_id:false});
+
 const userSchema= new mongoose.Schema({
     name:{
         type:String,
@@ -10,6 +19,7 @@ const userSchema= new mongoose.Schema({
         type:String,
         required:true,
         unique:true,
+        lowercase:true,
         trim:true
     },
     password:{
@@ -23,8 +33,20 @@ const userSchema= new mongoose.Schema({
         default:'candidate'
     },
     phone_no:{
-        type:Number,
-    }
+        type:String,
+        default:""
+    },
+    skills:[{type:String}],
+    education: [educationSchema],
+    isVerified:{
+        type:Boolean,
+        default:false
+    },
+    isActive:{
+        type:Boolean,
+        default:true
+    },
+
 },{timestamps:true});
 
 const user= mongoose.model('user',userSchema);
