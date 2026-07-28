@@ -1,6 +1,6 @@
-/* frontend/src/pages/examiner/css/CreateAssessment.css */
+/* frontend/src/pages/examiner/css/EditQuestion.css */
 
-.form-card {
+.question-form-card {
   background: white;
   padding: 30px;
   border-radius: 18px;
@@ -10,13 +10,13 @@
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: #334155;
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -41,14 +41,29 @@
 }
 
 textarea.form-control {
-  min-height: 120px;
+  min-height: 100px;
   resize: vertical;
 }
 
-/* Grid for the number inputs so they sit side-by-side */
+/* Options Grid layout */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.options-grid .form-group {
+  margin-bottom: 0;
+}
+
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 2fr 1fr;
   gap: 20px;
 }
 
@@ -63,7 +78,7 @@ textarea.form-control {
   cursor: pointer;
   transition: background 0.3s ease;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,10 +89,8 @@ textarea.form-control {
   background: #1d4ed8;
 }
 
-/* Re-using Teammate's layout utilities if needed */
 .header-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
 }
