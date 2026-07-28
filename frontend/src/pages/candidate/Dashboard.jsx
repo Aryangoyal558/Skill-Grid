@@ -1,35 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-import { AuthContext } from "../../context/AuthContext";
-
 import "./css/Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const { user, loading, setUser } = useContext(AuthContext);
-
-  const [assessments, setAssessments] = useState([]);
-
-  const [pageLoading, setPageLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadAssessments();
+    getDashboard();
   }, []);
 
-  const loadAssessments = async () => {
+  const getDashboard = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/assessment", {
+      const res = await axios.get("http://localhost:8081/candidate/dashboard", {
         withCredentials: true,
       });
 
-      setAssessments(res.data.assessments);
+      setUser(res.data.user);
     } catch (err) {
-      console.log(err);
+      navigate("/login");
     } finally {
-      setPageLoading(false);
+      setLoading(false);
     }
   };
 
@@ -42,129 +36,166 @@ const Dashboard = () => {
           withCredentials: true,
         },
       );
-
-      setUser(null);
-
-      navigate("/login");
     } catch (err) {
       console.log(err);
     }
+
+    navigate("/login");
   };
 
-  if (loading || pageLoading) {
-    return (
-      <h2
-        style={{
-          textAlign: "center",
-          marginTop: "100px",
-        }}
-      >
-        Loading...
-      </h2>
-    );
+  if (loading) {
+    return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
   }
 
-  if (!user) return null;
-
   return (
-    <div className="dashboard-layout">
-      {/* Sidebar */}
-      <nav className="sidebar">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png"
-          alt="logo"
-          className="sidebar-logo"
-        />
-
-        <div className="nav-item active">Dashboard</div>
-
-        <div className="spacer"></div>
-
-        <button className="nav-item" onClick={logout}>
-          Logout
-        </button>
-      </nav>
-
-      {/* Main */}
-      <main className="dashboard-main">
-        {/* Header */}
+    <>
         <header className="dashboard-header">
           <h1>Welcome, {user.name}</h1>
-
           <p>{user.email}</p>
-
-          <p>
-            Role :<strong> {user.role}</strong>
-          </p>
+          <p>Role : {user.role}</p>
         </header>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-3 pb-2">
+              <div className="stat-card" style={{ backgroundColor: "#e0f2fe" }}>
+                <h3>Account Status</h3>
+                <h2>{user.isVerified ? "Verified" : "Pending"}</h2>
 
-        {/* Profile */}
-        <div className="card">
-          <h2>Profile Information</h2>
-
-          <p>
-            <b>Name :</b> {user.name}
-          </p>
-
-          <p>
-            <b>Email :</b> {user.email}
-          </p>
-
-          <p>
-            <b>Role :</b> {user.role}
-          </p>
-
-          <p>
-            <b>Phone :</b> {user.phone_no || "Not Added"}
-          </p>
-
-          <p>
-            <b>Verified :</b> {user.isVerified ? "Yes" : "No"}
-          </p>
-
-          <p>
-            <b>Status :</b> {user.isActive ? "Active" : "Inactive"}
-          </p>
-
-          <p>
-            <b>Joined :</b> {new Date(user.createdAt).toLocaleDateString()}
-          </p>
-        </div>
-
-        {/* Assessments */}
-
-        <div className="card" style={{ marginTop: "25px" }}>
-          <h2>Available Assessments</h2>
-
-          {assessments.length === 0 ? (
-            <h3>No Assessments Available</h3>
-          ) : (
-            assessments.map((assessment) => (
-              <div key={assessment._id} className="assessment-card">
-                <h3>{assessment.title}</h3>
-
-                <p>{assessment.description}</p>
-
-                <p>
-                  <strong>Duration:</strong> {assessment.duration} Minutes
-                </p>
-
-                <p>
-                  <strong>Total Marks:</strong> {assessment.totalMarks}
-                </p>
-
-                <button
-                  className="btn-primary"
-                  onClick={() => navigate(`/candidate/exam/${assessment._id}`)}
-                >
-                  Start Assessment
-                </button>
+                <i
+                  className="fas fa-user-check stat-icon"
+                  style={{ color: "#0284c7" }}
+                ></i>
               </div>
-            ))
-          )}
+            </div>
+            <div className="col-md-3 pb-2">
+              <div className="stat-card" style={{ backgroundColor: "#dcfce7" }}>
+                <h3>Email</h3>
+                <h2>Active</h2>
+
+                <i
+                  className="fas fa-envelope stat-icon"
+                  style={{ color: "#166534" }}
+                ></i>
+              </div>
+            </div>
+
+            <div className="col-md-3 pb-2">
+              <div className="stat-card" style={{ backgroundColor: "#fef9c3" }}>
+                <h3>Phone</h3>
+                <h2>{user.phone_no ? "Added" : "Pending"}</h2>
+
+                <i
+                  className="fas fa-phone stat-icon"
+                  style={{ color: "#a16207" }}
+                ></i>
+              </div>
+            </div>
+
+            <div className="col-md-3 pb-2">
+              <div className="stat-card" style={{ backgroundColor: "#ffedd5" }}>
+                <h3>Role</h3>
+                <h2>{user.role}</h2>
+
+                <i
+                  className="fas fa-user-tag stat-icon"
+                  style={{ color: "#c2410c" }}
+                ></i>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6 pb-2">
+              <div className="dashboard-card">
+                <div className="card-header">
+                  <h2>Profile Information</h2>
+                </div>
+
+                <p>
+                  <b>Name :</b> {user.name}
+                </p>
+                <p>
+                  <b>Email :</b> {user.email}
+                </p>
+                <p>
+                  <b>Role :</b> {user.role}
+                </p>
+                <p>
+                  <b>Phone :</b> {user.phone_no || "Not Added"}
+                </p>
+                <p>
+                  <b>Verified :</b> {user.isVerified ? "Yes" : "No"}
+                </p>
+              </div>
+            </div>
+            <div className="col-md-6 pb-2">
+              <div className="dashboard-card">
+                <h2>Skill Assessment</h2>
+
+                <p>Take assessments, improve skills and earn certificates.</p>
+
+                <div className="list-item">
+                  <div className="list-item-left">
+                    <i className="fas fa-code"></i>
+
+                    <div>
+                      <strong>Available Assessments</strong>
+                      <p>Explore skill tests and challenges.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="list-item">
+                  <div className="list-item-left">
+                    <i className="fas fa-award"></i>
+
+                    <div>
+                      <strong>Certificates</strong>
+                      <p>View earned certificates.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6 pb-2">
+              <div className="dashboard-card">
+                <h2>Learning Progress</h2>
+
+                <p>Track your assessment performance.</p>
+
+                <div className="progress">
+                  <div className="progress-bar" style={{ width: "70%" }}></div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="dashboard-card">
+                <h2>Account Details</h2>
+
+                <p>
+                  <b>Email :</b> {user.email}
+                </p>
+                <p>
+                  <b>Role :</b> {user.role}
+                </p>
+                <p>
+                  <b>Status :</b>{" "}
+                  {user.isVerified ? "Verified" : "Not Verified"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-grid"></div>
+      </>
   );
 };
 
