@@ -47,9 +47,10 @@ const ResetPassword = () => {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        import.meta.env.VITE_SERVER_RESET_PASSWORD_URL,
+      const resetPasswordUrl = import.meta.env.VITE_SERVER_RESET_PASSWORD_URL || "http://localhost:5000/auth/reset-password";
 
+      const res = await axios.post(
+        resetPasswordUrl,
         {
           email,
           otp,

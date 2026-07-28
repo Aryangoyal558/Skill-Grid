@@ -41,8 +41,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      const loginUrl = import.meta.env.VITE_SERVER_LOGIN_URL || "http://localhost:5000/auth/login";
+
       const response = await axios.post(
-        import.meta.env.VITE_SERVER_LOGIN_URL,
+        loginUrl,
         formData,
         {
           withCredentials: true, // This tells the browser to accept secure cookies from the backend

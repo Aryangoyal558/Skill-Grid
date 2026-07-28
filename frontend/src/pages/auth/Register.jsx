@@ -62,8 +62,10 @@ const Register = () => {
     try {
       setLoading(true);
 
+      const signupUrl = import.meta.env.VITE_SERVER_SIGNUP_URL || "http://localhost:5000/auth/signup";
+
       const response = await axios.post(
-        import.meta.env.VITE_SERVER_SIGNUP_URL,
+        signupUrl,
         formData,
         {
           withCredentials: true,
