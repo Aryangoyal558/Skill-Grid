@@ -7,11 +7,46 @@ const authorizeRoles = require("../middlewares/role.middleware");
 
 const examinerController = require("../controllers/examiner.controller");
 
+router.post(
+    "/assessment",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
+    examinerController.createAssessment
+);
+
 router.get(
-    "/dashboard",
+    "/assessment",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
+    examinerController.getAssessments
+);
+
+router.put(
+    "/assessment/:id",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
+    examinerController.updateAssessment
+);
+
+router.delete(
+    "/assessment/:id",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
+    examinerController.deleteAssessment
+);
+
+router.put(
+    "/assessment/:id/publish",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
+    examinerController.publishAssessment
+);
+
+router.get(
+    "/my",
     authenticateUser,
     authorizeRoles("examiner"),
-    examinerController.dashboard
+    examinerController.getMyAssessments
 );
 
 module.exports = router;

@@ -116,11 +116,10 @@ const login = async (req, res) => {
     const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
-
         return res.status(400).json({
-            message: "All fields required",
+            success: false,
+            message: "All fields are required",
         });
-
     }
 
     try {
@@ -131,11 +130,10 @@ const login = async (req, res) => {
         });
 
         if (!user) {
-
             return res.status(401).json({
+                success: false,
                 message: "Invalid Credentials",
             });
-
         }
 
         const isMatch = await comparePassword(
@@ -144,42 +142,35 @@ const login = async (req, res) => {
         );
 
         if (!isMatch) {
-
             return res.status(401).json({
+                success: false,
                 message: "Invalid Credentials",
             });
-
         }
 
         const token = generateToken(user);
 
         res.cookie("token", token, {
-
             httpOnly: true,
-
-            secure: false,
-
+            secure: false,          // true in production (HTTPS)
             sameSite: "lax",
-
             maxAge: 7 * 24 * 60 * 60 * 1000,
-
         });
+
+        // Remove password before sending user
         const userResponse = user.toObject();
         delete userResponse.password;
 
-        res.status(200).json({
-
+        return res.status(200).json({
+            success: true,
             message: "Login Successful",
-
-            user,
-
+            user: userResponse,
         });
 
-    }
+    } catch (err) {
 
-    catch (err) {
-
-        res.status(500).json({
+        return res.status(500).json({
+            success: false,
             message: err.message,
         });
 
@@ -459,11 +450,24 @@ const logout = (req,res)=>{
 
 };
 
+const me = async (req, res) => {
+
+    return res.status(200).json({
+
+        success: true,
+
+        user: req.user
+
+    });
+
+};
+
 module.exports = {
     signup,
     login,
     forgetPassword,
     verifyOTP,
     resetPassword,
-    logout
+    logout,
+    me
 };

@@ -9,12 +9,19 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import EmailVerification from "./pages/auth/EmailVerification";
 import CandidateDashboard from "./pages/candidate/Dashboard";
 import ExaminerDashboard from "./pages/examiner/Dashboard";
+import ManageQuestions from "./pages/examiner/ManageQuestions";
 import LiveAssessment from "./pages/candidate/LiveAssessment";
 import CreateAssessment from "./pages/examiner/CreateAssessment";
+import AdminDashboard from "./pages/admin/Dashboard";
 import CertificateView from "./pages/candidate/CertificateView";
 import ExaminerSubmissions from "./pages/examiner/Submissions";
 import UserManagement from "./pages/examiner/UserManagement";
+import TaskAssessment from "./pages/candidate/TaskAssessment";
 import VerifyOtp from "./pages/auth/VerifyOtp";
+import MyResult from "./pages/candidate/MyResult";
+import AssessmentList from "./pages/examiner/AssessmentList";
+import EditQuestion from "./pages/examiner/EditQuestion";
+import ViewResults from "./pages/examiner/ViewResult";
 import ResetPassword from "./pages/auth/ResetPassword";
 function App() {
   return (
@@ -29,12 +36,58 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-        <Route path="/examiner/dashboard" element={<ExaminerDashboard />} />
-        <Route path="/candidate/assessment" element={<LiveAssessment />} />
+        <Route
+          path="/candidate/dashboard"
+          element={
+            <ProtectedRoute roles={["candidate"]}>
+              <CandidateDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/examiner/dashboard"
+          element={
+            <ProtectedRoute roles={["examiner"]}>
+              <ExaminerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/candidate/exam/:assessmentId"
+          element={
+            <ProtectedRoute roles={["candidate"]}>
+              <TaskAssessment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/examiner/assessments" element={<AssessmentList />} />
+
+        <Route path="/examiner/question/edit/:id" element={<EditQuestion />} />
+
+        <Route path="/examiner/results/:id" element={<ViewResults />} />
         <Route
           path="/examiner/create-assessment"
           element={<CreateAssessment />}
+        />
+        <Route
+          path="/candidate/results"
+          element={
+            <ProtectedRoute roles={["candidate"]}>
+              <MyResult />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/examiner/questions/:assessmentId"
+          element={<ManageQuestions />}
         />
         <Route path="/candidate/certificate" element={<CertificateView />} />
         <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />

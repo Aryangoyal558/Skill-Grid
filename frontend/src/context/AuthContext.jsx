@@ -1,38 +1,50 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
-// Create the context
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-    // When the app loads, check if there is a saved user in localStorage
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        const storedToken = localStorage.getItem('token');
-        
-        if (storedUser && storedToken) {
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
-    }, []);
+  const [loading, setLoading] = useState(true);
 
-    const login = (userData, token) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', token);
-        setUser(userData);
-    };
+  useEffect(() => {
+    checkLogin();
+  }, []);
 
-    const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        setUser(null);
-    };
+  const checkLogin = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8081/auth/me",
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+        {
+          withCredentials: true,
+        },
+      );
+
+      setUser(res.data.user);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+
+        setUser,
+
+        loading,
+
+        checkLogin,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export default AuthProvider;

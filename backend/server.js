@@ -10,6 +10,10 @@ const signin_upRoute=require('./routes/signin_up');
 const adminRoutes = require("./routes/admin.route");
 const candidateRoutes = require("./routes/candidate.route");
 const examinerRoutes = require("./routes/examiner.route");
+const questionRoutes = require("./routes/question.route");
+const attemptRoute = require("./routes/attempt.route");
+const resultRoutes = require("./routes/result.route");
+
 
 const app=express();
 const port= process.env.PORT;
@@ -27,6 +31,9 @@ app.use('/auth',signin_upRoute);
 app.use("/admin", adminRoutes);
 app.use("/candidate", candidateRoutes);
 app.use("/examiner", examinerRoutes);
+app.use("/question", questionRoutes);
+app.use("/attempt", attemptRoute);
+app.use("/result", resultRoutes);
 
 app.get('/',(req,res)=>{
     res.send("Page under process...");

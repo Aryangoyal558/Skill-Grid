@@ -1,34 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import { AuthContext } from "../../context/AuthContext";
+
 import "./css/Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const { user, loading, setUser } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(true);
+  const [assessments, setAssessments] = useState([]);
+
+  const [pageLoading, setPageLoading] = useState(true);
 
   useEffect(() => {
-    getDashboard();
+    loadAssessments();
   }, []);
 
-  const getDashboard = async () => {
+  const loadAssessments = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:8081/candidate/dashboard",
+      const res = await axios.get("http://localhost:8081/assessment", {
+        withCredentials: true,
+      });
 
-        {
-          withCredentials: true,
-        },
-      );
-
-      setUser(res.data.user);
+      setAssessments(res.data.assessments);
     } catch (err) {
-      navigate("/login");
+      console.log(err);
     } finally {
-      setLoading(false);
+      setPageLoading(false);
     }
   };
 
@@ -36,26 +37,38 @@ const Dashboard = () => {
     try {
       await axios.post(
         "http://localhost:8081/auth/logout",
-
         {},
-
         {
           withCredentials: true,
         },
       );
+
+      setUser(null);
+
+      navigate("/login");
     } catch (err) {
       console.log(err);
     }
-
-    navigate("/login");
   };
 
-  if (loading) {
-    return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
+  if (loading || pageLoading) {
+    return (
+      <h2
+        style={{
+          textAlign: "center",
+          marginTop: "100px",
+        }}
+      >
+        Loading...
+      </h2>
+    );
   }
+
+  if (!user) return null;
 
   return (
     <div className="dashboard-layout">
+      {/* Sidebar */}
       <nav className="sidebar">
         <img
           src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png"
@@ -63,7 +76,7 @@ const Dashboard = () => {
           className="sidebar-logo"
         />
 
-        <div className="nav-item active">Home</div>
+        <div className="nav-item active">Dashboard</div>
 
         <div className="spacer"></div>
 
@@ -72,49 +85,83 @@ const Dashboard = () => {
         </button>
       </nav>
 
+      {/* Main */}
       <main className="dashboard-main">
+        {/* Header */}
         <header className="dashboard-header">
           <h1>Welcome, {user.name}</h1>
 
           <p>{user.email}</p>
 
-          <p>Role : {user.role}</p>
+          <p>
+            Role :<strong> {user.role}</strong>
+          </p>
         </header>
 
-        <div className="dashboard-grid">
-          <div className="card">
-            <h2>Profile</h2>
+        {/* Profile */}
+        <div className="card">
+          <h2>Profile Information</h2>
 
-            <p>
-              <b>Name :</b>
+          <p>
+            <b>Name :</b> {user.name}
+          </p>
 
-              {user.name}
-            </p>
+          <p>
+            <b>Email :</b> {user.email}
+          </p>
 
-            <p>
-              <b>Email :</b>
+          <p>
+            <b>Role :</b> {user.role}
+          </p>
 
-              {user.email}
-            </p>
+          <p>
+            <b>Phone :</b> {user.phone_no || "Not Added"}
+          </p>
 
-            <p>
-              <b>Role :</b>
+          <p>
+            <b>Verified :</b> {user.isVerified ? "Yes" : "No"}
+          </p>
 
-              {user.role}
-            </p>
+          <p>
+            <b>Status :</b> {user.isActive ? "Active" : "Inactive"}
+          </p>
 
-            <p>
-              <b>Phone :</b>
+          <p>
+            <b>Joined :</b> {new Date(user.createdAt).toLocaleDateString()}
+          </p>
+        </div>
 
-              {user.phone_no || "Not Added"}
-            </p>
+        {/* Assessments */}
 
-            <p>
-              <b>Verified :</b>
+        <div className="card" style={{ marginTop: "25px" }}>
+          <h2>Available Assessments</h2>
 
-              {user.isVerified ? "Yes" : "No"}
-            </p>
-          </div>
+          {assessments.length === 0 ? (
+            <h3>No Assessments Available</h3>
+          ) : (
+            assessments.map((assessment) => (
+              <div key={assessment._id} className="assessment-card">
+                <h3>{assessment.title}</h3>
+
+                <p>{assessment.description}</p>
+
+                <p>
+                  <strong>Duration:</strong> {assessment.duration} Minutes
+                </p>
+
+                <p>
+                  <strong>Total Marks:</strong> {assessment.totalMarks}
+                </p>
+
+                <button
+                  className="btn-primary"
+                  onClick={() => navigate(`/candidate/exam/${assessment._id}`)}
+                >
+                  Start Assessment
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </main>
     </div>
