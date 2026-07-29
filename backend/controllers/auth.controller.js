@@ -11,12 +11,13 @@ const signup = async (req, res) => {
         const {
             fullname,
             email,
+            phone,
             password,
             confirmPassword,
             roles
         } = req.body;
 
-        if (!fullname || !email || !password || !confirmPassword) {
+        if (!fullname || !email ||!phone || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -27,6 +28,13 @@ const signup = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Passwords do not match"
+            });
+        }
+
+        if(phone.length<10){
+            return res.status(400).json({
+                success: false,
+                message: "Phone number should be in 10 digit"
             });
         }
 
@@ -54,6 +62,7 @@ const signup = async (req, res) => {
         const user = await User.create({
             name: fullname,
             email,
+            phone_no:phone,
             password: hashedPassword,
             role: roles || "candidate"
         });

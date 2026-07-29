@@ -12,6 +12,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     roles: "candidate",
@@ -75,6 +76,7 @@ const Register = () => {
       setFormData({
         fullname: "",
         email: "",
+        phone: "",
         password: "",
         confirmPassword: "",
         roles: "candidate",
@@ -192,6 +194,16 @@ const Register = () => {
                 />
               </div>
 
+              <div className="input-group">
+                <input
+                  type="phone"
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="input-group">
                 <input
                   type={showPassword ? "text" : "password"}
