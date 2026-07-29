@@ -1,201 +1,267 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../../api/axiosConfig";
 import "./css/Dashboard.css";
+import axios from "axios";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
+  const [assessments, setAssessments] = useState([]);
+  const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDashboard();
+    fetchCandidateDashboardData();
   }, []);
 
-  const getDashboard = async () => {
+  const fetchCandidateDashboardData = async () => {
     try {
-      const res = await axios.get("http://localhost:8081/candidate/dashboard", {
-        withCredentials: true,
-      });
+      // Fetch user profile first
 
-      setUser(res.data.user);
+      const userRes = await axios.get(
+        "http://localhost:8081/candidate/dashboard",
+        {
+          withCredentials: true,
+        },
+      );
+      setUser(userRes.data.user);
+
+      // Fetch optional dashboard lists safely
+      const [assessmentsRes, certsRes] = await Promise.allSettled([
+        axios.get("http://localhost:8081/candidate/assessments", {
+          withCredentials: true,
+        }),
+        axios.get("http://localhost:8081/candidate/certificates", {
+          withCredentials: true,
+        }),
+      ]);
+
+      if (assessmentsRes.status === "fulfilled") {
+        setAssessments(assessmentsRes.value.data.assessments || []);
+      }
+      if (certsRes.status === "fulfilled") {
+        setCertificates(certsRes.value.data.certificates || []);
+      }
     } catch (err) {
-      navigate("/login");
+      if (err.response?.status === 401) {
+        navigate("/login");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:8081/auth/logout",
-        {},
-        {
-          withCredentials: true,
-        },
-      );
+      await api.post("/auth/logout", {});
     } catch (err) {
-      console.log(err);
+      console.error("Logout error:", err);
     }
-
     navigate("/login");
   };
 
   if (loading) {
-    return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
+    return (
+      <h2 style={{ textAlign: "center", marginTop: "2rem" }}>
+        Loading Dashboard...
+      </h2>
+    );
   }
 
+  if (!user) return null;
+
   return (
-    <>
-        <header className="dashboard-header">
-          <h1>Welcome, {user.name}</h1>
-          <p>{user.email}</p>
-          <p>Role : {user.role}</p>
-        </header>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#e0f2fe" }}>
-                <h3>Account Status</h3>
-                <h2>{user.isVerified ? "Verified" : "Pending"}</h2>
+    <div className="candidate-dashboard-container">
+      {/* Header */}
+      <header className="dashboard-header flex justify-between items-center p-4 bg-slate-800 text-white">
+        <div>
+          <h1 className="text-2xl font-bold">Welcome, {user.name}</h1>
+          <p className="text-sm text-slate-300">
+            {user.email} | Role: <span className="capitalize">{user.role}</span>
+          </p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+        >
+          Logout
+        </button>
+      </header>
 
-                <i
-                  className="fas fa-user-check stat-icon"
-                  style={{ color: "#0284c7" }}
-                ></i>
-              </div>
+      {/* KPI Stats Section */}
+      <div className="container mt-4">
+        <div className="row">
+          <div className="col-md-3 pb-2">
+            <div className="stat-card" style={{ backgroundColor: "#e0f2fe" }}>
+              <h3>Account Status</h3>
+              <h2>{user.isVerified ? "Verified" : "Pending"}</h2>
+              <i
+                className="fas fa-user-check stat-icon"
+                style={{ color: "#0284c7" }}
+              ></i>
             </div>
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#dcfce7" }}>
-                <h3>Email</h3>
-                <h2>Active</h2>
+          </div>
 
-                <i
-                  className="fas fa-envelope stat-icon"
-                  style={{ color: "#166534" }}
-                ></i>
-              </div>
+          <div className="col-md-3 pb-2">
+            <div className="stat-card" style={{ backgroundColor: "#dcfce7" }}>
+              <h3>Available Tests</h3>
+              <h2>{assessments.length}</h2>
+              <i
+                className="fas fa-file-alt stat-icon"
+                style={{ color: "#166534" }}
+              ></i>
             </div>
+          </div>
 
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#fef9c3" }}>
-                <h3>Phone</h3>
-                <h2>{user.phone_no ? "Added" : "Pending"}</h2>
-
-                <i
-                  className="fas fa-phone stat-icon"
-                  style={{ color: "#a16207" }}
-                ></i>
-              </div>
+          <div className="col-md-3 pb-2">
+            <div className="stat-card" style={{ backgroundColor: "#fef9c3" }}>
+              <h3>Certificates</h3>
+              <h2>{certificates.length}</h2>
+              <i
+                className="fas fa-award stat-icon"
+                style={{ color: "#a16207" }}
+              ></i>
             </div>
+          </div>
 
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#ffedd5" }}>
-                <h3>Role</h3>
-                <h2>{user.role}</h2>
-
-                <i
-                  className="fas fa-user-tag stat-icon"
-                  style={{ color: "#c2410c" }}
-                ></i>
-              </div>
+          <div className="col-md-3 pb-2">
+            <div className="stat-card" style={{ backgroundColor: "#ffedd5" }}>
+              <h3>Role</h3>
+              <h2 className="capitalize">{user.role}</h2>
+              <i
+                className="fas fa-user-tag stat-icon"
+                style={{ color: "#c2410c" }}
+              ></i>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 pb-2">
-              <div className="dashboard-card">
-                <div className="card-header">
-                  <h2>Profile Information</h2>
-                </div>
-
-                <p>
-                  <b>Name :</b> {user.name}
-                </p>
-                <p>
-                  <b>Email :</b> {user.email}
-                </p>
-                <p>
-                  <b>Role :</b> {user.role}
-                </p>
-                <p>
-                  <b>Phone :</b> {user.phone_no || "Not Added"}
-                </p>
-                <p>
-                  <b>Verified :</b> {user.isVerified ? "Yes" : "No"}
-                </p>
+      {/* Main Content Grid */}
+      <div className="container mt-4">
+        <div className="row">
+          {/* Profile Card */}
+          <div className="col-md-5 pb-2">
+            <div className="dashboard-card">
+              <div className="card-header mb-3">
+                <h2 className="text-xl font-bold">Profile Information</h2>
               </div>
+              <p>
+                <b>Name:</b> {user.name}
+              </p>
+              <p>
+                <b>Email:</b> {user.email}
+              </p>
+              <p>
+                <b>Phone:</b> {user.phone_no || "Not Added"}
+              </p>
+              <p>
+                <b>Verified:</b> {user.isVerified ? "Yes" : "No"}
+              </p>
             </div>
-            <div className="col-md-6 pb-2">
-              <div className="dashboard-card">
-                <h2>Skill Assessment</h2>
+          </div>
 
-                <p>Take assessments, improve skills and earn certificates.</p>
+          {/* Available Skill Assessments Section */}
+          <div className="col-md-7 pb-2">
+            <div className="dashboard-card">
+              <h2 className="text-xl font-bold mb-2">
+                Available Skill Assessments
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Select an assessment to start your evaluation.
+              </p>
 
-                <div className="list-item">
-                  <div className="list-item-left">
-                    <i className="fas fa-code"></i>
-
-                    <div>
-                      <strong>Available Assessments</strong>
-                      <p>Explore skill tests and challenges.</p>
+              {assessments.length === 0 ? (
+                <p className="text-slate-500 italic">
+                  No published assessments available right now.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {assessments.map((test) => (
+                    <div
+                      key={test._id}
+                      className="list-item flex justify-between items-center p-3 border rounded-lg"
+                    >
+                      <div className="list-item-left flex items-center gap-3">
+                        <i className="fas fa-code text-blue-600 text-xl"></i>
+                        <div>
+                          <strong className="block text-slate-800">
+                            {test.title}
+                          </strong>
+                          <p className="text-xs text-slate-500">
+                            Duration: {test.timeLimit} mins | Passing Score:{" "}
+                            {test.minPassScore}%
+                          </p>
+                        </div>
+                      </div>
+                      {test.attempted ? (
+                        <button
+                          disabled
+                          className="bg-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-md cursor-not-allowed"
+                        >
+                          Completed ✓
+                        </button>
+                      ) : (
+                        <Link
+                          to={`/candidate/assessment/${test._id}`}
+                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-md"
+                        >
+                          Start Test
+                        </Link>
+                      )}
                     </div>
-                  </div>
+                  ))}
                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
-                <div className="list-item">
-                  <div className="list-item-left">
-                    <i className="fas fa-award"></i>
-
-                    <div>
-                      <strong>Certificates</strong>
-                      <p>View earned certificates.</p>
+      {/* Certificates Section */}
+      <div className="container mt-4 mb-6">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="dashboard-card">
+              <h2 className="text-xl font-bold mb-3">Earned Certificates</h2>
+              {certificates.length === 0 ? (
+                <p className="text-slate-500 italic">
+                  No certificates earned yet. Complete and pass an assessment to
+                  issue your digital certificate.
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {certificates.map((cert) => (
+                    <div
+                      key={cert._id}
+                      className="p-4 border rounded-lg bg-slate-50 flex justify-between items-center"
+                    >
+                      <div>
+                        <strong className="text-slate-800">
+                          {cert.assessmentTitle}
+                        </strong>
+                        <p className="text-xs text-slate-500">
+                          Issued:{" "}
+                          {new Date(cert.issueDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <Link
+                        to={`/verify-certificate/${cert.certificateCode}`}
+                        className="text-blue-600 hover:underline text-sm font-medium"
+                      >
+                        View & Verify
+                      </Link>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
-
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 pb-2">
-              <div className="dashboard-card">
-                <h2>Learning Progress</h2>
-
-                <p>Track your assessment performance.</p>
-
-                <div className="progress">
-                  <div className="progress-bar" style={{ width: "70%" }}></div>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="dashboard-card">
-                <h2>Account Details</h2>
-
-                <p>
-                  <b>Email :</b> {user.email}
-                </p>
-                <p>
-                  <b>Role :</b> {user.role}
-                </p>
-                <p>
-                  <b>Status :</b>{" "}
-                  {user.isVerified ? "Verified" : "Not Verified"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-grid"></div>
-      </>
+      </div>
+    </div>
   );
 };
 

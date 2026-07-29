@@ -1,4 +1,5 @@
 const Question = require("../models/question");
+const Result = require("../models/result");
 
 const addQuestion = async (req, res) => {
     try {
@@ -64,6 +65,17 @@ const addQuestion = async (req, res) => {
 const getQuestions = async (req, res) => {
 
     try {
+        const alreadySubmitted = await Result.findOne({
+            candidate: req.user.id,
+            assessment: req.params.id,
+        });
+
+        if (alreadySubmitted) {
+            return res.status(400).json({
+            success: false,
+            message: "You have already completed this assessment.",
+        });
+}
 
         const questions = await Question.find({
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create a central instance of axios
 // Ask your friend what port their backend is running on (e.g., 5000 or 8000)
 const API = axios.create({
-    baseURL: 'http://localhost:5000/api', // Change this to match your friend's backend URL
+    baseURL: 'http://localhost:8081/api', // Change this to match your friend's backend URL
     headers: {
         'Content-Type': 'application/json',
     }

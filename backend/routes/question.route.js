@@ -20,9 +20,17 @@ router.post(
 );
 
 router.get(
-    "/:id",
+    "/manage/:id",
     authenticateUser,
     authorizeRoles("examiner", "admin"),
+    questionController.getQuestions
+);
+
+// Candidate - Take Assessment
+router.get(
+    "/assessment/:id",
+    authenticateUser,
+    authorizeRoles("candidate", "examiner", "admin"),
     questionController.getQuestions
 );
 

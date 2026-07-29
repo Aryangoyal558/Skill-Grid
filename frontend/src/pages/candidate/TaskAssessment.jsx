@@ -22,7 +22,7 @@ const TakeAssessment = () => {
     if (loading) return;
 
     if (timeLeft <= 0) {
-      submitExam();
+      submitExam(true);
       return;
     }
 
@@ -33,61 +33,18 @@ const TakeAssessment = () => {
     return () => clearInterval(timer);
   }, [timeLeft, loading]);
 
-  // const loadQuestions = async () => {
-  //   try {
-  //     const res = await axios.get(
-  //       `http://localhost:8081/question/${assessmentId}`,
-  //       {
-  //         withCredentials: true,
-  //       },
-  //     );
-
-  //     setQuestions(res.data.questions);
-  //   } catch (err) {
-  //     alert(err.response?.data?.message || err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const loadQuestions = async () => {
     try {
-      const dummyQuestions = [
+      const res = await axios.get(
+        `http://localhost:8081/question/assessment/${assessmentId}`,
         {
-          _id: "1",
-          question: "What is the output of 2 + 2?",
-          options: ["3", "4", "5", "6"],
+          withCredentials: true,
         },
-        {
-          _id: "2",
-          question: "Which language is used for React?",
-          options: ["Python", "JavaScript", "Java", "C++"],
-        },
-        {
-          _id: "3",
-          question: "Which database is commonly used with Node.js?",
-          options: ["MongoDB", "Oracle", "MySQL", "PostgreSQL"],
-        },
-        {
-          _id: "4",
-          question: "What does CSS stand for?",
-          options: [
-            "Computer Style Sheet",
-            "Cascading Style Sheets",
-            "Creative Style System",
-            "Colorful Style Sheets",
-          ],
-        },
-        {
-          _id: "5",
-          question: "Which hook is used for side effects in React?",
-          options: ["useState", "useEffect", "useContext", "useReducer"],
-        },
-      ];
+      );
 
-      setQuestions(dummyQuestions);
+      setQuestions(res.data.questions);
     } catch (err) {
-      alert(err.message);
+      alert(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
@@ -112,9 +69,11 @@ const TakeAssessment = () => {
     }
   };
 
-  const submitExam = async () => {
-    if (!window.confirm("Are you sure you want to submit your assessment?")) {
-      return;
+  const submitExam = async (autoSubmit = false) => {
+    if (!autoSubmit) {
+      const ok = window.confirm("Are you sure you want to submit?");
+
+      if (!ok) return;
     }
 
     try {
@@ -263,7 +222,7 @@ const TakeAssessment = () => {
                         name={question._id}
                         value={option}
                         checked={answers[question._id] === option}
-                        onChange={() => handleAnswer(question._id, option)}
+                        onChange={() => handleAnswer(question._id, index)}
                       />
 
                       <span className="ms-2">{option}</span>
