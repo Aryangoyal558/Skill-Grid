@@ -40,7 +40,7 @@ const CandidateLayout = () => {
         {/* Assessments */}
         <div
           className="nav-item"
-          onClick={() => navigate("/candidate/assessment/:id")}
+          onClick={() => navigate("/candidate/assessment")}
           title="Assessments"
         >
           <i className="fas fa-laptop-code"></i>
