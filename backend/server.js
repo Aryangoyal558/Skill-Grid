@@ -14,6 +14,7 @@ const questionRoutes = require("./routes/question.route");
 const attemptRoute = require("./routes/attempt.route");
 const resultRoutes = require("./routes/result.route");
 const certificateRoute=require("./routes/certificate.route");
+const skillRoute = require("./routes/skill");
 
 
 const app=express();
@@ -36,6 +37,7 @@ app.use("/question", questionRoutes);
 app.use("/attempt", attemptRoute);
 app.use("/result", resultRoutes);
 app.use("/certificate",certificateRoute);
+app.use("/skill", skillRoute);
 
 app.get('/',(req,res)=>{
     res.send("Page under process...");

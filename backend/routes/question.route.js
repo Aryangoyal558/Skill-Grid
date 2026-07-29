@@ -1,22 +1,28 @@
 const express = require("express");
-
 const router = express.Router();
 
 const authenticateUser = require("../middlewares/auth.middleware");
 const authorizeRoles = require("../middlewares/role.middleware");
-
 const questionController = require("../controllers/question.controller");
 
-router.post(
-
-    "/",
-
+// ==========================================
+// NEW: Fetch Questions from Bank by Skill ID
+// ==========================================
+router.get(
+    "/bank/:skillId",
     authenticateUser,
-
     authorizeRoles("examiner", "admin"),
+    questionController.getBankQuestionsBySkill
+);
 
+// ==========================================
+// Existing Routes
+// ==========================================
+router.post(
+    "/",
+    authenticateUser,
+    authorizeRoles("examiner", "admin"),
     questionController.addQuestion
-
 );
 
 router.get(
@@ -47,6 +53,5 @@ router.put(
     authorizeRoles("examiner", "admin"),
     questionController.updateQuestion
 );
-
 
 module.exports = router;

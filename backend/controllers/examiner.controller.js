@@ -1,24 +1,10 @@
-const Assessment=require("../models/assessment");
+const Assessment = require("../models/assessment");
 
-const createAssessment=async(req,res)=>{
+const createAssessment = async (req, res) => {
 
-    try{
+    try {
 
-        const{
-
-            title,
-
-            description,
-
-            duration,
-
-            totalMarks,
-
-            passingMarks
-
-        }=req.body;
-
-        const assessment=await Assessment.create({
+        const {
 
             title,
 
@@ -30,15 +16,33 @@ const createAssessment=async(req,res)=>{
 
             passingMarks,
 
-            createdBy:req.user.id
+            skillId
+
+        } = req.body;
+
+        const assessment = await Assessment.create({
+
+            title,
+
+            description,
+
+            duration,
+
+            totalMarks,
+
+            passingMarks,
+
+            skillId,
+
+            createdBy: req.user.id
 
         });
 
         res.status(201).json({
 
-            success:true,
+            success: true,
 
-            message:"Assessment Created",
+            message: "Assessment Created",
 
             assessment
 
@@ -46,13 +50,13 @@ const createAssessment=async(req,res)=>{
 
     }
 
-    catch(err){
+    catch (err) {
 
         res.status(500).json({
 
-            success:false,
+            success: false,
 
-            message:err.message
+            message: err.message
 
         });
 
@@ -296,7 +300,7 @@ const getMyAssessments = async (req, res) => {
     }
 };
 
-module.exports={
+module.exports = {
 
     createAssessment,
     getAssessments,

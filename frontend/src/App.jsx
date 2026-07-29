@@ -131,6 +131,7 @@ import ManageQuestions from "./pages/examiner/ManageQuestions";
 import AssessmentList from "./pages/examiner/AssessmentList";
 import EditQuestion from "./pages/examiner/EditQuestion";
 import ViewResults from "./pages/examiner/ViewResult";
+import SelectSkill from "./pages/examiner/SelectSkill"; // (Make sure the path matches your folders!)
 
 // Admin
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -199,7 +200,7 @@ function App() {
         </Route>
 
         {/* ================= EXAMINER ================= */}
-
+<Route path="/examiner/manage-questions/:assessmentId" element={<ManageQuestions />} />
         <Route
           path="/examiner/dashboard"
           element={
@@ -209,10 +210,11 @@ function App() {
           }
         />
 
-        <Route
-          path="/examiner/create-assessment"
-          element={<CreateAssessment />}
-        />
+        {/* 1. Sidebar button takes them to the grid of skills */}
+<Route path="/examiner/create-assessment" element={<SelectSkill />} />
+
+{/* 2. Clicking a skill card takes them to the actual form */}
+<Route path="/examiner/create-assessment-form" element={<CreateAssessment />} />
 
         <Route path="/examiner/assessments" element={<AssessmentList />} />
 

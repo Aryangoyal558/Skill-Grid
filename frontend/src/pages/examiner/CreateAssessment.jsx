@@ -1,24 +1,27 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// Make sure this matches your friend's actual import path!
+import { useNavigate, useLocation } from "react-router-dom"; // IMPORTED useLocation
 import api from "../../service/api";
-// Import teammate's global dashboard layout CSS + the new form CSS
 import "./css/Dashboard.css";
 import "./css/CreateAssessment.css";
 
 const CreateAssessment = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Hook to grab the passed state
 
-  // Your friend's exact state
+  // Grab the skill data passed from the SelectSkill page
+  // Fallback to "General" if they somehow access the page directly
+  const selectedSkill = location.state || { skillId: null, skillName: "General" };
+
+  // Updated state to include skillId for the backend
   const [form, setForm] = useState({
     title: "",
     description: "",
     duration: "",
     totalMarks: "",
     passingMarks: "",
+    skillId: selectedSkill.skillId, // ADDED SKILL ID
   });
 
-  // Your friend's exact onChange handler
   const change = (e) => {
     setForm({
       ...form,
@@ -26,11 +29,10 @@ const CreateAssessment = () => {
     });
   };
 
-  // Your friend's exact submit handler
   const submit = async (e) => {
     e.preventDefault();
     try {
-      // Sends the form data to the backend
+      // Sends the form data (now including skillId) to the backend
       const res = await api.post("/examiner/assessment", form);
       alert("Assessment Created Successfully!");
       navigate("/examiner/assessments");
@@ -41,36 +43,21 @@ const CreateAssessment = () => {
 
   return (
     <div className="dashboard-layout">
-      {/* 1. The Teammate's Sidebar (copied over so navigation works) */}
+      {/* 1. Sidebar */}
       <nav className="sidebar">
-        <div
-          className="sidebar-logo"
-          style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb" }}
-        >
+        <div className="sidebar-logo" style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb" }}>
           URV
         </div>
 
-        <button
-          className="nav-item"
-          onClick={() => navigate("/examiner/dashboard")}
-          title="Dashboard"
-        >
+        <button className="nav-item" onClick={() => navigate("/examiner/dashboard")} title="Dashboard">
           <i className="fas fa-home"></i>
         </button>
 
-        <button
-          className="nav-item active"
-          onClick={() => navigate("/examiner/create-assessment")}
-          title="Create Assessment"
-        >
+        <button className="nav-item active" onClick={() => navigate("/examiner/create-assessment")} title="Create Assessment">
           <i className="fas fa-plus-circle"></i>
         </button>
 
-        <button
-          className="nav-item"
-          onClick={() => navigate("/examiner/assessments")}
-          title="My Assessments"
-        >
+        <button className="nav-item" onClick={() => navigate("/examiner/assessments")} title="My Assessments">
           <i className="fas fa-list-ul"></i>
         </button>
 
@@ -81,20 +68,16 @@ const CreateAssessment = () => {
       <main className="dashboard-main">
         <div className="header-actions">
           <div className="dashboard-header" style={{ marginBottom: 0 }}>
-            <h1>Create New Assessment</h1>
+            {/* DYNAMIC TITLE: Shows the selected skill! */}
+            <h1>Create {selectedSkill.skillName} Assessment</h1>
             <p>Define the parameters and rules for your new skill test.</p>
           </div>
           <button
             className="logout-btn"
-            onClick={() => navigate("/examiner/dashboard")}
-            style={{
-              padding: "10px 20px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              background: "white",
-            }}
+            onClick={() => navigate("/examiner/create-assessment")} // Changed to go back to skill selection
+            style={{ padding: "10px 20px", borderRadius: "8px", cursor: "pointer", background: "white" }}
           >
-            <i className="fas fa-arrow-left"></i> Back
+            <i className="fas fa-arrow-left"></i> Back to Skills
           </button>
         </div>
 
@@ -125,7 +108,6 @@ const CreateAssessment = () => {
               />
             </div>
 
-            {/* A row for numerical settings */}
             <div className="form-row">
               <div className="form-group">
                 <label>Duration (Minutes)</label>
