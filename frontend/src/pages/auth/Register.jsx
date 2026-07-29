@@ -2,12 +2,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import "./css/Register.css";
 
 const Register = () => {
   const navigate = useNavigate();
-
   const [role, setRole] = useState("candidate");
 
   const [formData, setFormData] = useState({
@@ -20,9 +18,7 @@ const Register = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -34,7 +30,6 @@ const Register = () => {
 
   const handleRoleChange = (selectedRole) => {
     setRole(selectedRole);
-
     setFormData((prev) => ({
       ...prev,
       roles: selectedRole,
@@ -112,18 +107,6 @@ const Register = () => {
 
   return (
     <div className="register-page">
-      <header className="platform-header">
-        <div className="logo-container">
-          <div className="logo-text">
-            <span className="company-name">UJWAL RADIANT VISION</span>
-
-            <span className="platform-title">
-              Online Skill Assessment and Digital Certification Platform
-            </span>
-          </div>
-        </div>
-      </header>
-
       <div className="main-container">
         <div className="content-box">
           <h2>Welcome to Ujwal Radiant Vision</h2>
@@ -133,36 +116,27 @@ const Register = () => {
           </p>
 
           <div className="role-cards">
-            {/* Candidate */}
-
             <div
               className={`role-card ${role === "candidate" ? "selected" : ""}`}
               onClick={() => handleRoleChange("candidate")}
             >
               <h3>CANDIDATE (Student)</h3>
-
               <p>Access assessments, track progress and certificates.</p>
             </div>
-
-            {/* Examiner */}
 
             <div
               className={`role-card ${role === "examiner" ? "selected" : ""}`}
               onClick={() => handleRoleChange("examiner")}
             >
               <h3>EXAMINER</h3>
-
               <p>Create assessments and evaluate students.</p>
             </div>
-
-            {/* Admin */}
 
             <div
               className={`role-card ${role === "admin" ? "selected" : ""}`}
               onClick={() => handleRoleChange("admin")}
             >
               <h3>ADMINISTRATOR</h3>
-
               <p>Manage users and platform settings.</p>
             </div>
           </div>

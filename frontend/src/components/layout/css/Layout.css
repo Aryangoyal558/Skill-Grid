@@ -1,0 +1,29 @@
+/* =========================
+   APP BACKGROUND
+========================= */
+
+.app-layout {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,.22), transparent 35%),
+    radial-gradient(circle at bottom right, rgba(14,165,233,.15), transparent 35%),
+    linear-gradient(180deg,#020617 0%,#071126 45%,#020617 100%);
+
+  color: var(--text-primary);
+
+  transition: .4s ease;
+}
+
+body.light-theme .app-layout{
+  background:
+    radial-gradient(circle at top left,#dbeafe,transparent 40%),
+    radial-gradient(circle at bottom right,#bfdbfe,transparent 40%),
+    linear-gradient(180deg,#ffffff,#eff6ff);
+}
+
+.main-content{
+    min-height:calc(100vh - 80px);
+}

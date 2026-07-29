@@ -1,81 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../../api/axiosConfig";
-import "./css/Dashboard.css";
 import axios from "axios";
+import "./css/Dashboard.css";
 
 const CertificateView = () => {
   const navigate = useNavigate();
 
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
-  // Dummy data to visualize the layout
+
   useEffect(() => {
     fetchCandidateDashboardData();
   }, []);
 
   const fetchCandidateDashboardData = async () => {
     try {
-      // Fetch user profile first
+      const response = await axios.get("http://localhost:8081/certificate/my", {
+        withCredentials: true,
+      });
 
-      // Fetch optional dashboard lists safely
-      const [certsRes] = await Promise.allSettled([
-        axios.get("http://localhost:8081/certificate/my", {
-          withCredentials: true,
-        }),
-      ]);
-
-      if (certsRes.status === "fulfilled") {
-        setCertificates(certsRes.value.data.certificates || []);
-      }
+      setCertificates(response.data.certificates || []);
     } catch (err) {
       if (err.response?.status === 401) {
         navigate("/login");
       }
+
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
+
   if (loading) {
     return (
-      <h2 style={{ textAlign: "center", marginTop: "2rem" }}>
-        Loading Dashboard...
+      <h2
+        style={{
+          textAlign: "center",
+          marginTop: "2rem",
+        }}
+      >
+        Loading Certificates...
       </h2>
     );
   }
 
   return (
-    <div className="container mt-4 mb-6">
+    <div className="container mt-4 mb-5">
       <div className="row">
         <div className="col-md-12">
           <div className="dashboard-card">
-            <h2 className="text-xl font-bold mb-3">Earned Certificates</h2>
+            <h2 className="mb-4">Earned Certificates</h2>
+
             {certificates.length === 0 ? (
-              <p className="text-slate-500 italic">
+              <p className="text-secondary">
                 No certificates earned yet. Complete and pass an assessment to
                 issue your digital certificate.
               </p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="row g-4">
                 {certificates.map((cert) => (
-                  <div
-                    key={cert._id}
-                    className="p-4 border rounded-lg bg-slate-50 flex justify-between items-center"
-                  >
-                    <div>
-                      <strong className="text-slate-800">
-                        {cert.assessmentTitle}
-                      </strong>
-                      <p className="text-xs text-slate-500">
-                        Issued: {new Date(cert.issueDate).toLocaleDateString()}
-                      </p>
+                  <div className="col-md-6" key={cert._id}>
+                    <div className="certificate-card">
+                      <div>
+                        <h5>{cert.assessmentTitle}</h5>
+
+                        <p>
+                          Issued:{" "}
+                          {new Date(cert.issueDate).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <Link
+                        to={`/candidate/verify-certificate/${cert.certificateCode}`}
+                        className="btn btn-primary btn-sm"
+                      >
+                        View & Verify
+                      </Link>
                     </div>
-                    <Link
-                      to={`/candidate/verify-certificate/${cert.certificateCode}`}
-                      className="text-blue-600 hover:underline text-sm font-medium"
-                    >
-                      View & Verify
-                    </Link>
                   </div>
                 ))}
               </div>

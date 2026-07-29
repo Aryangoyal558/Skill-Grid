@@ -19,12 +19,11 @@ const Dashboard = () => {
   const fetchCandidateDashboardData = async () => {
     try {
       // Fetch user profile first
-
       const userRes = await axios.get(
         "http://localhost:8081/candidate/dashboard",
         {
           withCredentials: true,
-        },
+        }
       );
       setUser(userRes.data.user);
 
@@ -64,9 +63,9 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <h2 style={{ textAlign: "center", marginTop: "2rem" }}>
-        Loading Dashboard...
-      </h2>
+      <div className="loading-container">
+        <h2>Loading Dashboard...</h2>
+      </div>
     );
   }
 
@@ -75,16 +74,16 @@ const Dashboard = () => {
   return (
     <div className="candidate-dashboard-container">
       {/* Header */}
-      <header className="dashboard-header flex justify-between items-center p-4 bg-slate-800 text-white">
+      <header className="dashboard-header flex justify-between items-center p-4">
         <div>
-          <h1 className="text-2xl font-bold">Welcome, {user.name}</h1>
-          <p className="text-sm text-slate-300">
+          <h1 className="text-2xl font-bold">Welcome, {user.name} 👋</h1>
+          <p className="text-sm user-subtext">
             {user.email} | Role: <span className="capitalize">{user.role}</span>
           </p>
         </div>
         <button
           onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+          className="logout-btn px-4 py-2 rounded-lg transition-colors text-sm"
         >
           Logout
         </button>
@@ -94,46 +93,34 @@ const Dashboard = () => {
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-3 pb-2">
-            <div className="stat-card" style={{ backgroundColor: "#e0f2fe" }}>
+            <div className="stat-card blue-stat">
               <h3>Account Status</h3>
               <h2>{user.isVerified ? "Verified" : "Pending"}</h2>
-              <i
-                className="fas fa-user-check stat-icon"
-                style={{ color: "#0284c7" }}
-              ></i>
+              <i className="fas fa-user-check stat-icon"></i>
             </div>
           </div>
 
           <div className="col-md-3 pb-2">
-            <div className="stat-card" style={{ backgroundColor: "#dcfce7" }}>
+            <div className="stat-card green-stat">
               <h3>Available Tests</h3>
               <h2>{assessments.length}</h2>
-              <i
-                className="fas fa-file-alt stat-icon"
-                style={{ color: "#166534" }}
-              ></i>
+              <i className="fas fa-file-alt stat-icon"></i>
             </div>
           </div>
 
           <div className="col-md-3 pb-2">
-            <div className="stat-card" style={{ backgroundColor: "#fef9c3" }}>
+            <div className="stat-card purple-stat">
               <h3>Certificates</h3>
               <h2>{certificates.length}</h2>
-              <i
-                className="fas fa-award stat-icon"
-                style={{ color: "#a16207" }}
-              ></i>
+              <i className="fas fa-award stat-icon"></i>
             </div>
           </div>
 
           <div className="col-md-3 pb-2">
-            <div className="stat-card" style={{ backgroundColor: "#ffedd5" }}>
+            <div className="stat-card orange-stat">
               <h3>Role</h3>
               <h2 className="capitalize">{user.role}</h2>
-              <i
-                className="fas fa-user-tag stat-icon"
-                style={{ color: "#c2410c" }}
-              ></i>
+              <i className="fas fa-user-tag stat-icon"></i>
             </div>
           </div>
         </div>
@@ -148,18 +135,20 @@ const Dashboard = () => {
               <div className="card-header mb-3">
                 <h2 className="text-xl font-bold">Profile Information</h2>
               </div>
-              <p>
-                <b>Name:</b> {user.name}
-              </p>
-              <p>
-                <b>Email:</b> {user.email}
-              </p>
-              <p>
-                <b>Phone:</b> {user.phone_no || "Not Added"}
-              </p>
-              <p>
-                <b>Verified:</b> {user.isVerified ? "Yes" : "No"}
-              </p>
+              <div className="profile-info-list">
+                <p>
+                  <b>Name:</b> <span>{user.name}</span>
+                </p>
+                <p>
+                  <b>Email:</b> <span>{user.email}</span>
+                </p>
+                <p>
+                  <b>Phone:</b> <span>{user.phone_no || "Not Added"}</span>
+                </p>
+                <p>
+                  <b>Verified:</b> <span>{user.isVerified ? "Yes" : "No"}</span>
+                </p>
+              </div>
             </div>
           </div>
 
@@ -169,44 +158,38 @@ const Dashboard = () => {
               <h2 className="text-xl font-bold mb-2">
                 Available Skill Assessments
               </h2>
-              <p className="text-gray-600 mb-4">
+              <p className="card-subtitle mb-4">
                 Select an assessment to start your evaluation.
               </p>
 
               {assessments.length === 0 ? (
-                <p className="text-slate-500 italic">
+                <p className="empty-text">
                   No published assessments available right now.
                 </p>
               ) : (
                 <div className="space-y-3">
                   {assessments.map((test) => (
-                    <div
-                      key={test._id}
-                      className="list-item flex justify-between items-center p-3 border rounded-lg"
-                    >
+                    <div key={test._id} className="list-item">
                       <div className="list-item-left flex items-center gap-3">
-                        <i className="fas fa-code text-blue-600 text-xl"></i>
+                        <i className="fas fa-code icon-badge"></i>
                         <div>
-                          <strong className="block text-slate-800">
+                          <strong className="block item-title">
                             {test.title}
                           </strong>
-                          <p className="text-xs text-slate-500">
+                          <p className="item-subtext">
                             Duration: {test.timeLimit} mins | Passing Score:{" "}
                             {test.minPassScore}%
                           </p>
                         </div>
                       </div>
                       {test.attempted ? (
-                        <button
-                          disabled
-                          className="bg-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-md cursor-not-allowed"
-                        >
+                        <button disabled className="btn-completed">
                           Completed ✓
                         </button>
                       ) : (
                         <Link
                           to={`/candidate/assessment/${test._id}`}
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-md"
+                          className="btn-start"
                         >
                           Start Test
                         </Link>
@@ -227,29 +210,26 @@ const Dashboard = () => {
             <div className="dashboard-card">
               <h2 className="text-xl font-bold mb-3">Earned Certificates</h2>
               {certificates.length === 0 ? (
-                <p className="text-slate-500 italic">
+                <p className="empty-text">
                   No certificates earned yet. Complete and pass an assessment to
                   issue your digital certificate.
                 </p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {certificates.map((cert) => (
-                    <div
-                      key={cert._id}
-                      className="p-4 border rounded-lg bg-slate-50 flex justify-between items-center"
-                    >
+                    <div key={cert._id} className="cert-card">
                       <div>
-                        <strong className="text-slate-800">
+                        <strong className="item-title">
                           {cert.assessmentTitle}
                         </strong>
-                        <p className="text-xs text-slate-500">
+                        <p className="item-subtext">
                           Issued:{" "}
                           {new Date(cert.issueDate).toLocaleDateString()}
                         </p>
                       </div>
                       <Link
                         to={`/candidate/verify-certificate/${cert.certificateCode}`}
-                        className="text-blue-600 hover:underline text-sm font-medium"
+                        className="btn-verify"
                       >
                         View & Verify
                       </Link>

@@ -99,13 +99,16 @@
 //   );
 // }
 
-// export default App;
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Auth Pages
+// Common Layout & Landing Component Imports
+import Layout from "./components/layout/Layout";
+import LandingPage from "./pages/LandingPage"; 
+
+// Auth Pages (inside src/pages/auth/)
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -131,7 +134,7 @@ import ManageQuestions from "./pages/examiner/ManageQuestions";
 import AssessmentList from "./pages/examiner/AssessmentList";
 import EditQuestion from "./pages/examiner/EditQuestion";
 import ViewResults from "./pages/examiner/ViewResult";
-import SelectSkill from "./pages/examiner/SelectSkill"; // (Make sure the path matches your folders!)
+import SelectSkill from "./pages/examiner/SelectSkill";
 
 // Admin
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -142,25 +145,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* DEFAULT */}
+        {/* ================= PUBLIC / AUTH (SHARED HEADER LAYOUT) ================= */}
+        <Route element={<Layout />}>
+          {/* Landing Page as root */}
+          <Route path="/" element={<LandingPage />} />
 
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        {/* AUTH ROUTES */}
-
-        <Route path="/login" element={<Login />} />
-
-        <Route path="/register" element={<Register />} />
-
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-
-        <Route path="/verify-otp" element={<VerifyOtp />} />
-
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/verify-registration" element={<VerifyRegistration />} />
+          {/* Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-registration" element={<VerifyRegistration />} />
+        </Route>
 
         {/* ================= CANDIDATE ================= */}
-
         <Route
           path="/candidate"
           element={
@@ -169,38 +168,24 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* /candidate */}
-
           <Route index element={<Navigate to="dashboard" replace />} />
-
-          {/* Dashboard */}
-
           <Route path="dashboard" element={<CandidateDashboard />} />
-
-          {/* Start Assessment */}
           <Route path="assessment" element={<LiveAssessment />} />
-
           <Route path="assessment/:assessmentId" element={<TaskAssessment />} />
-
-          {/* Results */}
-
           <Route path="results" element={<MyResult />} />
-
-          {/* Certificate */}
-
           <Route path="certificate" element={<CertificateView />} />
           <Route
             path="verify-certificate/:certificateCode"
             element={<VerifyCertificate />}
           />
-
-          {/* Profile */}
-
           <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* ================= EXAMINER ================= */}
-<Route path="/examiner/manage-questions/:assessmentId" element={<ManageQuestions />} />
+        <Route
+          path="/examiner/manage-questions/:assessmentId"
+          element={<ManageQuestions />}
+        />
         <Route
           path="/examiner/dashboard"
           element={
@@ -209,30 +194,22 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* 1. Sidebar button takes them to the grid of skills */}
-<Route path="/examiner/create-assessment" element={<SelectSkill />} />
-
-{/* 2. Clicking a skill card takes them to the actual form */}
-<Route path="/examiner/create-assessment-form" element={<CreateAssessment />} />
-
+        <Route path="/examiner/create-assessment" element={<SelectSkill />} />
+        <Route
+          path="/examiner/create-assessment-form"
+          element={<CreateAssessment />}
+        />
         <Route path="/examiner/assessments" element={<AssessmentList />} />
-
         <Route
           path="/examiner/questions/:assessmentId"
           element={<ManageQuestions />}
         />
-
         <Route path="/examiner/question/edit/:id" element={<EditQuestion />} />
-
         <Route path="/examiner/results/:id" element={<ViewResults />} />
-
         <Route path="/examiner/submissions" element={<ExaminerSubmissions />} />
-
         <Route path="/examiner/users" element={<UserManagement />} />
 
         {/* ================= ADMIN ================= */}
-
         <Route
           path="/admin/dashboard"
           element={
@@ -243,8 +220,7 @@ function App() {
         />
 
         {/* FALLBACK */}
-
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

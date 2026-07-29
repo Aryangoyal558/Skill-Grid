@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import logo from "../../assets/logo.png";
 
 const VerifyOtp = () => {
   const navigate = useNavigate();
@@ -20,7 +19,6 @@ const VerifyOtp = () => {
 
       const res = await axios.post(
         import.meta.env.VITE_SERVER_VERIFY_OTP_URL,
-
         {
           email,
           otp,
@@ -41,51 +39,35 @@ const VerifyOtp = () => {
 
   return (
     <div className="forgot-password-page">
-      <div className="app-container">
-        <header className="platform-header">
-          <div className="logo-container">
-            <img src={logo} alt="logo" className="platform-logo" />
+      <div className="main-container">
+        <div className="form-box">
+          <h2>Verify OTP</h2>
 
-            <div className="logo-text">
-              <span className="company-name">UJWAL RADIANT VISION</span>
+          <p className="subtitle">
+            Enter the OTP sent to
+            <br />
+            <strong>{email}</strong>
+          </p>
 
-              <span className="platform-title">
-                Online Skill Assessment and Digital Certification Platform
-              </span>
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+                required
+              />
             </div>
-          </div>
-        </header>
 
-        <div className="main-container">
-          <div className="form-box">
-            <h2>Verify OTP</h2>
+            <button className="action-btn" disabled={loading}>
+              {loading ? "Verifying..." : "Verify OTP"}
+            </button>
+          </form>
 
-            <p className="subtitle">
-              Enter the OTP sent to
-              <br />
-              <strong>{email}</strong>
-            </p>
-
-            <form onSubmit={handleSubmit}>
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter OTP"
-                  required
-                />
-              </div>
-
-              <button className="action-btn" disabled={loading}>
-                {loading ? "Verifying..." : "Verify OTP"}
-              </button>
-            </form>
-
-            <Link to="/forgot-password" className="back-link">
-              ← Back
-            </Link>
-          </div>
+          <Link to="/forgot-password" className="back-link">
+            ← Back
+          </Link>
         </div>
       </div>
     </div>

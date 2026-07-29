@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./css/dashboard.css";
+import logo from "../../assets/logo.png";
 
 const CandidateLayout = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const CandidateLayout = () => {
       {/* Sidebar */}
       <nav className="sidebar">
         <img
-          src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png"
+          src={logo}
           className="sidebar-logo"
           alt="logo"
         />
@@ -74,6 +75,7 @@ const CandidateLayout = () => {
         </div>
 
         <div className="spacer"></div>
+        
 
         {/* Logout */}
         <button className="nav-item logout-btn" onClick={logout} title="Logout">
