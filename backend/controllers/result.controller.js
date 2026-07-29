@@ -1,5 +1,7 @@
 const Result = require("../models/result");
 const Question = require("../models/question");
+const Certificate = require("../models/certificate");
+const { v4: uuid } = require("uuid");
 
 const submitResult = async (req, res) => {
   try {
@@ -35,14 +37,15 @@ const submitResult = async (req, res) => {
 
       const selected = answers[q._id];
 
-      answerArray.push({
-        question: q._id,
-        selectedAnswer: selected || "",
-      });
+answerArray.push({
+  question: q._id,
+  selectedAnswer:
+    selected !== undefined ? Number(selected) : -1,
+});
 
-      if (selected === q.correctAnswer) {
-        score += q.marks;
-      }
+if (Number(selected) === Number(q.correctAnswer)) {
+  score += q.marks;
+}
     });
 
     const percentage = Number(
@@ -60,6 +63,21 @@ const submitResult = async (req, res) => {
       percentage,
       status,
     });
+    if (status === "Pass") {
+
+    await Certificate.create({
+
+        certificateCode: uuid(),
+
+        candidate,
+
+        assessment,
+
+        result: result._id
+
+    });
+
+}
 
     return res.status(201).json({
       success: true,

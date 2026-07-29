@@ -20,16 +20,13 @@ const CandidateLayout = () => {
 
   return (
     <div className="dashboard-layout">
-
       {/* Sidebar */}
       <nav className="sidebar">
-
         <img
           src="https://cdn-icons-png.flaticon.com/512/1162/1162846.png"
           className="sidebar-logo"
           alt="logo"
         />
-
 
         {/* Dashboard */}
         <div
@@ -40,7 +37,6 @@ const CandidateLayout = () => {
           <i className="fas fa-home"></i>
         </div>
 
-
         {/* Assessments */}
         <div
           className="nav-item"
@@ -49,7 +45,6 @@ const CandidateLayout = () => {
         >
           <i className="fas fa-laptop-code"></i>
         </div>
-
 
         {/* Results */}
         <div
@@ -60,7 +55,6 @@ const CandidateLayout = () => {
           <i className="fas fa-chart-line"></i>
         </div>
 
-
         {/* Certificates */}
         <div
           className="nav-item"
@@ -69,7 +63,6 @@ const CandidateLayout = () => {
         >
           <i className="fas fa-certificate"></i>
         </div>
-
 
         {/* Profile */}
         <div
@@ -80,29 +73,18 @@ const CandidateLayout = () => {
           <i className="fas fa-user"></i>
         </div>
 
-
         <div className="spacer"></div>
 
-
         {/* Logout */}
-        <button 
-          className="nav-item logout-btn"
-          onClick={logout}
-          title="Logout"
-        >
+        <button className="nav-item logout-btn" onClick={logout} title="Logout">
           <i className="fas fa-sign-out-alt"></i>
         </button>
-
-
       </nav>
-
 
       {/* Page Content */}
       <main className="dashboard-main">
         <Outlet />
       </main>
-
-
     </div>
   );
 };

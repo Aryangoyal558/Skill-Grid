@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // Make sure this matches your friend's actual import path!
-import api from "../../services/api"; 
+import api from "../../service/api";
 // Import teammate's global dashboard layout CSS + the new form CSS
-import "./css/Dashboard.css"; 
+import "./css/Dashboard.css";
 import "./css/CreateAssessment.css";
 
 const CreateAssessment = () => {
@@ -43,20 +43,37 @@ const CreateAssessment = () => {
     <div className="dashboard-layout">
       {/* 1. The Teammate's Sidebar (copied over so navigation works) */}
       <nav className="sidebar">
-        <div className="sidebar-logo" style={{ fontSize: '24px', fontWeight: 'bold', color: '#2563eb' }}>URV</div>
-        
-        <button className="nav-item" onClick={() => navigate("/examiner/dashboard")} title="Dashboard">
+        <div
+          className="sidebar-logo"
+          style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb" }}
+        >
+          URV
+        </div>
+
+        <button
+          className="nav-item"
+          onClick={() => navigate("/examiner/dashboard")}
+          title="Dashboard"
+        >
           <i className="fas fa-home"></i>
         </button>
-        
-        <button className="nav-item active" onClick={() => navigate("/examiner/create-assessment")} title="Create Assessment">
+
+        <button
+          className="nav-item active"
+          onClick={() => navigate("/examiner/create-assessment")}
+          title="Create Assessment"
+        >
           <i className="fas fa-plus-circle"></i>
         </button>
-        
-        <button className="nav-item" onClick={() => navigate("/examiner/assessments")} title="My Assessments">
+
+        <button
+          className="nav-item"
+          onClick={() => navigate("/examiner/assessments")}
+          title="My Assessments"
+        >
           <i className="fas fa-list-ul"></i>
         </button>
-        
+
         <div className="spacer"></div>
       </nav>
 
@@ -67,10 +84,15 @@ const CreateAssessment = () => {
             <h1>Create New Assessment</h1>
             <p>Define the parameters and rules for your new skill test.</p>
           </div>
-          <button 
-            className="logout-btn" 
+          <button
+            className="logout-btn"
             onClick={() => navigate("/examiner/dashboard")}
-            style={{ padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', background: 'white' }}
+            style={{
+              padding: "10px 20px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              background: "white",
+            }}
           >
             <i className="fas fa-arrow-left"></i> Back
           </button>
@@ -79,15 +101,14 @@ const CreateAssessment = () => {
         {/* 3. The Form Card */}
         <div className="form-card">
           <form onSubmit={submit}>
-            
             <div className="form-group">
               <label>Assessment Title</label>
-              <input 
+              <input
                 className="form-control"
-                name="title" 
-                placeholder="e.g. Advanced JavaScript Fundamentals" 
+                name="title"
+                placeholder="e.g. Advanced JavaScript Fundamentals"
                 value={form.title}
-                onChange={change} 
+                onChange={change}
                 required
               />
             </div>
@@ -152,7 +173,6 @@ const CreateAssessment = () => {
             <button type="submit" className="submit-btn">
               <i className="fas fa-save"></i> Save & Create Assessment
             </button>
-            
           </form>
         </div>
       </main>

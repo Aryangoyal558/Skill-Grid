@@ -9,9 +9,9 @@ const answerSchema = new mongoose.Schema(
     },
 
     selectedAnswer: {
-      type: String,
-      required: true,
-    },
+    type: Number,
+    default:-1,
+}
   },
   { _id: false }
 );

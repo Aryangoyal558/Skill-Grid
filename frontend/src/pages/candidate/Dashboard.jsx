@@ -33,7 +33,7 @@ const Dashboard = () => {
         axios.get("http://localhost:8081/candidate/assessments", {
           withCredentials: true,
         }),
-        axios.get("http://localhost:8081/candidate/certificates", {
+        axios.get("http://localhost:8081/certificate/my", {
           withCredentials: true,
         }),
       ]);
@@ -248,7 +248,7 @@ const Dashboard = () => {
                         </p>
                       </div>
                       <Link
-                        to={`/verify-certificate/${cert.certificateCode}`}
+                        to={`/candidate/verify-certificate/${cert.certificateCode}`}
                         className="text-blue-600 hover:underline text-sm font-medium"
                       >
                         View & Verify

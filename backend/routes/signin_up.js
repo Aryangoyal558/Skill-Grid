@@ -11,5 +11,13 @@ router.post("/verify-otp", authController.verifyOTP);
 router.post("/reset-password", authController.resetPassword);
 router.post("/logout", authController.logout);
 router.get("/me",authenticateUser,authController.me);
+router.post(
+    "/verify-registration",
+    authController.verifyRegistration
+);
+router.post(
+    "/resend-verification",
+    authController.resendVerificationOTP
+);
 
 module.exports = router;

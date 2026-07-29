@@ -1,6 +1,7 @@
 const Result = require('../models/result');
 const User = require('../models/user');
 const Assessment = require("../models/assessment");
+const Assignment = require("../models/assignment");
 
 const dashboard = async (req, res) => {
 
@@ -17,30 +18,60 @@ const dashboard = async (req, res) => {
 };
 
 const getAvailableAssessments = async (req, res) => {
-  try {
-    const assessments = await Assessment.find({ isPublished: true });
 
-    const results = await Result.find({
-      candidate: req.user.id,
-    }).select("assessment");
+    try {
 
-    const attemptedIds = results.map((r) => r.assessment.toString());
+        const assignments = await Assignment.find({
 
-    const data = assessments.map((a) => ({
-      ...a.toObject(),
-      attempted: attemptedIds.includes(a._id.toString()),
-    }));
+            candidate: req.user.id
 
-    return res.status(200).json({
-      success: true,
-      assessments: data,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
+        })
+        .populate("assessment");
+
+        const results = await Result.find({
+
+            candidate: req.user.id
+
+        }).select("assessment");
+
+        const attemptedIds = results.map(r => r.assessment.toString());
+
+        const data = assignments.map(a => ({
+
+            ...a.assessment.toObject(),
+
+            attempted: attemptedIds.includes(
+                a.assessment._id.toString()
+            ),
+
+            assignedOn: a.createdAt,
+
+            dueDate: a.dueDate
+
+        }));
+
+        res.json({
+
+            success:true,
+
+            assessments:data
+
+        });
+
+    }
+
+    catch(err){
+
+        res.status(500).json({
+
+            success:false,
+
+            message:err.message
+
+        });
+
+    }
+
 };
 
 // GET /candidate/certificates

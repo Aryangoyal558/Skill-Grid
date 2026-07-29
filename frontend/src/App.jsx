@@ -111,6 +111,7 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOtp from "./pages/auth/VerifyOtp";
 import ResetPassword from "./pages/auth/ResetPassword";
+import VerifyRegistration from "./pages/auth/VerifyRegistration";
 
 // Candidate Pages
 import CandidateLayout from "./pages/candidate/CandidateLayout";
@@ -134,6 +135,8 @@ import ViewResults from "./pages/examiner/ViewResult";
 // Admin
 import AdminDashboard from "./pages/admin/Dashboard";
 
+import VerifyCertificate from "./pages/VerifyCertificate";
+
 function App() {
   return (
     <BrowserRouter>
@@ -153,6 +156,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
 
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-registration" element={<VerifyRegistration />} />
 
         {/* ================= CANDIDATE ================= */}
 
@@ -184,6 +188,10 @@ function App() {
           {/* Certificate */}
 
           <Route path="certificate" element={<CertificateView />} />
+          <Route
+            path="verify-certificate/:certificateCode"
+            element={<VerifyCertificate />}
+          />
 
           {/* Profile */}
 

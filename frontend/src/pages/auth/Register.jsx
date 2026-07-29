@@ -82,7 +82,11 @@ const Register = () => {
 
       setRole("candidate");
 
-      navigate("/login");
+      navigate("/verify-registration", {
+        state: {
+          email: formData.email,
+        },
+      });
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     } finally {

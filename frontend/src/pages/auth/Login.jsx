@@ -57,7 +57,18 @@ const Login = () => {
       await checkLogin();
       navigate(`/${response.data.user.role}/dashboard`);
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      const data = err.response?.data;
+
+      if (data?.verificationRequired) {
+        navigate("/verify-registration", {
+          state: {
+            email: data.email,
+          },
+        });
+        return;
+      }
+
+      alert(data?.message || err.message);
     }
   };
 
