@@ -13,8 +13,14 @@ import {
 } from "react-icons/fa";
 
 import "./LandingPage.css";
+import Typewriter from "typewriter-effect";
+import AboutSection from "../components/card/AboutSection";
+import TeamSection from "../components/card/TeamSection";
 
+import { useNavigate } from "react-router-dom";
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   const features = [
     {
       icon: <FaBrain />,
@@ -38,19 +44,32 @@ const LandingPage = () => {
     },
   ];
 
-  const categories = [
-    "Java",
-    "React",
-    "Node.js",
-    "Python",
-    "C++",
-    "SQL",
-  ];
+  const categories = ["Java", "React", "Node.js", "Python", "C++", "SQL"];
 
   return (
-    <div className="">
+    <div>
+      <section>
+        <AboutSection />
+      </section>
+      {/* CTA */}
+      <section
+        className="cta-section"
+        style={{ background: "rgb(179, 44, 75)" }}
+      >
+        <h2>Ready To Showcase Your Skills?</h2>
+        <p>Join thousands of learners building their professional careers.</p>
+
+        <Link className="hero-btn" to="/register">
+          Start Assessment
+        </Link>
+      </section>
+
+      <section className="py-5" style={{ background: "rgb(25, 13, 94)" }}>
+        <TeamSection />
+      </section>
+
       {/* HERO */}
-      <section className="hero-section container-fluid px-lg-5 px-4">
+      <section className="hero-section container-fluid px-lg-5 px-5 py-5">
         <div className="row align-items-center">
           <div className="col-lg-6">
             <span className="hero-badge">
@@ -65,8 +84,8 @@ const LandingPage = () => {
 
             <p className="hero-description">
               Test your technical knowledge through professional online
-              assessments and receive trusted digital certificates that
-              showcase your expertise.
+              assessments and receive trusted digital certificates that showcase
+              your expertise.
             </p>
 
             <div className="hero-buttons">
@@ -111,17 +130,23 @@ const LandingPage = () => {
 
               <div className="skill-row">
                 <span>Java</span>
-                <span><FaCheckCircle /></span>
+                <span>
+                  <FaCheckCircle />
+                </span>
               </div>
 
               <div className="skill-row">
                 <span>React</span>
-                <span><FaCheckCircle /></span>
+                <span>
+                  <FaCheckCircle />
+                </span>
               </div>
 
               <div className="skill-row">
                 <span>SQL</span>
-                <span><FaCheckCircle /></span>
+                <span>
+                  <FaCheckCircle />
+                </span>
               </div>
 
               <div className="certificate-status">
@@ -134,12 +159,10 @@ const LandingPage = () => {
       </section>
 
       {/* FEATURES */}
-      <section className="features-section container-fluid px-lg-5 px-4">
+      <section className="features-section container-fluid px-lg-5 px-4 py-5">
         <div className="text-center mb-5">
           <h2>Everything You Need</h2>
-          <p>
-            Powerful tools for learners, professionals and recruiters.
-          </p>
+          <p>Powerful tools for learners, professionals and recruiters.</p>
         </div>
 
         <div className="row">
@@ -157,11 +180,23 @@ const LandingPage = () => {
 
       {/* HOW IT WORKS */}
       <section className="how-section container-fluid px-lg-5 px-4">
-        <div className="text-center">
-          <h2>How It Works</h2>
+        <div className="text-center mb-5">
+      
+          <h2 style={{ color: "#fff", textAlign: "center" }}>
+            <Typewriter
+              options={{
+                strings: ["How It Works"],
+                autoStart: true,
+                loop: true,
+                delay: 80,
+                cursor: "....",
+              }}
+            />
+          </h2>
+          <p className="text-secondary">Simple steps to get certified</p>
         </div>
 
-        <div className="row mt-5">
+        <div className="row mt-5 position-relative">
           <Step number="1" title="Register" />
           <Step number="2" title="Choose Assessment" />
           <Step number="3" title="Take Test" />
@@ -170,18 +205,27 @@ const LandingPage = () => {
       </section>
 
       {/* ASSESSMENTS */}
-      <section className="category-section container-fluid px-lg-5 px-4">
-        <div className="text-center mb-5">
-          <h2>Popular Assessments</h2>
+
+      <section
+        className="category-section container-fluid px-lg-5 px-4 py-5"
+        style={{ background: "#190d5e" }}
+      >
+        <div className="text-center mb-5 text-white">
+          <h2 className="fw-bold">Popular Assessments</h2>
+          <p className="text-light">Explore top skill-based assessments</p>
         </div>
 
-        <div className="row">
+        <div className="row justify-content-center">
           {categories.map((item, index) => (
             <div className="col-lg-2 col-md-4 col-6 mb-4" key={index}>
-              <div className="category-card">
-                <FaLaptopCode />
-                <h5>{item}</h5>
-                <FaArrowRight />
+              <div
+                className="category-card text-center"
+                onClick={() => navigate("/login")}
+                style={{ cursor: "pointer" }}
+              >
+                <FaLaptopCode className="icon" />
+                <h6 className="mt-3">{item}</h6>
+                <FaArrowRight className="arrow" />
               </div>
             </div>
           ))}
@@ -215,8 +259,8 @@ const LandingPage = () => {
           <div className="col-lg-6">
             <h2>Share Your Achievement</h2>
             <p>
-              Download your certificate, verify it instantly and showcase
-              your skills on professional platforms.
+              Download your certificate, verify it instantly and showcase your
+              skills on professional platforms.
             </p>
 
             <ul>
@@ -229,17 +273,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cta-section">
-        <h2>Ready To Showcase Your Skills?</h2>
-        <p>
-          Join thousands of learners building their professional careers.
-        </p>
-
-        <Link className="hero-btn" to="/register">
-          Start Assessment
-        </Link>
-      </section>
+     
     </div>
   );
 };

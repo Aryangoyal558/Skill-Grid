@@ -26,7 +26,7 @@ const ForgotPassword = () => {
     <div className="forgot-password-page">
       <div className="main-container">
         <div className="form-box">
-          <h2>Forgot Password?</h2>
+          <h2 className="text-white">Forgot Password?</h2>
           <p className="subtitle">
             Enter the email address associated with your account and we'll
             send you a link to reset your password.

@@ -1,14 +1,20 @@
-/* frontend/src/pages/examiner/css/CreateAssessment.css */
-
+/* ===== FORM CARD (GLASS DARK) ===== */
 .form-card {
-  background: white;
+  background: rgba(15, 30, 70, 0.65);
+  backdrop-filter: blur(12px);
+  color: #e2e8f0;
+
   padding: 30px;
   border-radius: 18px;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
   max-width: 800px;
   margin-top: 20px;
+
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
+/* ===== FORM GROUP ===== */
 .form-group {
   margin-bottom: 20px;
 }
@@ -16,68 +22,108 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #333;
+  color: #c7d2fe;
   font-weight: 600;
   font-size: 0.95rem;
 }
 
+/* ===== TRANSPARENT INPUT ===== */
 .form-control {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
-  color: #334155;
-  transition: all 0.3s ease;
-  background-color: #f8fafc;
+
+  color: #e2e8f0;
+
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
 }
 
+/* placeholder */
+.form-control::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+/* hover */
+.form-control:hover {
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+/* focus */
 .form-control:focus {
   outline: none;
-  border-color: #2563eb;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  border-color: #3b82f6;
+
+  background: rgba(2, 6, 23, 0.35);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+/* textarea */
 textarea.form-control {
   min-height: 120px;
   resize: vertical;
 }
 
-/* Grid for the number inputs so they sit side-by-side */
+/* ===== GRID ===== */
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
 
+/* ===== BUTTON ===== */
 .submit-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #e2e8f0;
+
+  border: 1px solid rgba(59, 130, 246, 0.4);
+
   padding: 16px 30px;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 10px;
+
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.25s ease;
+
   width: 100%;
   margin-top: 10px;
+
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
+/* hover */
 .submit-btn:hover {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.3);
 }
 
-/* Re-using Teammate's layout utilities if needed */
+/* click */
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* ===== HEADER ===== */
 .header-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+}
+
+.header-actions h2,
+.header-actions span {
+  color: #e2e8f0;
 }

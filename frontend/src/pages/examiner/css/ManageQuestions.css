@@ -139,7 +139,9 @@
 /* Reusing Form styles from previous components */
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; }
-.form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; background: #f8fafc; }
-.form-control:focus { outline: none; border-color: #2563eb; background: white; }
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+.form-control { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit;  }
+.form-control:focus { outline: none; border-color: #2563eb; }
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
 .form-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+

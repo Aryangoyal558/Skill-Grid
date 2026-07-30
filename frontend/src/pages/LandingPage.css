@@ -16,67 +16,10 @@
   --border: rgba(56, 189, 248, 0.2);
 }
 
-/* ===========================
-   THEME OVERRIDES
-=========================== */
 
-.landing-page.dark-theme,
-.dark-theme .landing-page {
-  --bg: #020617;
-  --bg-secondary: #0f172a;
-  --card-bg: rgba(15, 23, 42, 0.85);
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --border: rgba(56, 189, 248, 0.2);
-}
-
-.landing-page.light-theme,
-.light-theme .landing-page {
-  --bg: #f8fafc;
-  --bg-secondary: #ffffff;
-  --card-bg: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --border: #dbeafe;
-}
-
-/* ===========================
-   BASE PAGE
-=========================== */
-
-.landing-page {
-  width: 100%;
-  min-height: 100vh;
-  background: 
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.25), transparent 40%),
-    radial-gradient(circle at left, rgba(56, 189, 248, 0.15), transparent 45%),
-    var(--bg);
-  color: var(--text-primary);
-  transition: background-color 0.35s ease, color 0.35s ease;
-  overflow: hidden;
-}
-
-/* Global Typography Fallbacks for Clarity */
-.landing-page h1,
-.landing-page h2,
-.landing-page h3,
-.landing-page h4,
-.landing-page h5,
-.landing-page h6 {
-  color: var(--text-primary);
-}
-
-.landing-page p,
-.landing-page span:not(.status):not(.hero-badge) {
-  color: var(--text-secondary);
-}
-
-/* ===========================
-   HERO SECTION
-=========================== */
 
 .hero-section {
-  padding: 90px 0;
+  padding: 30px 0;
 }
 
 .hero-badge {
@@ -253,54 +196,163 @@
 /* ===========================
    FEATURES & CARDS
 =========================== */
-
-.features-section {
-  padding: 90px 0;
-}
-
-.features-section h2 {
-  text-align: center;
-  color: var(--text-primary);
-  font-size: 48px;
-  font-weight: 700;
-}
-
 .feature-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  position: relative;
   border-radius: 20px;
   padding: 30px;
   height: 100%;
-  transition: transform 0.3s ease;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  color: white;
 }
 
+/* 🎨 DIFFERENT COLORFUL BACKGROUNDS */
+.row > div:nth-child(1) .feature-card {
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+}
+
+.row > div:nth-child(2) .feature-card {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+}
+
+.row > div:nth-child(3) .feature-card {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.row > div:nth-child(4) .feature-card {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+}
+
+/* ✨ GLASS OVERLAY */
+.feature-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+/* CONTENT ABOVE OVERLAY */
+.feature-card * {
+  position: relative;
+  z-index: 1;
+}
+
+/* HOVER */
 .feature-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 .feature-icon {
-  font-size: 36px;
-  color: var(--secondary);
+  font-size: 40px;
   margin-bottom: 20px;
+  color: white; /* 🔥 CHANGE THIS */
 }
 
 .feature-card h4 {
-  color: var(--text-primary);
-  margin-bottom: 12px;
+  color: white;
 }
 
 .feature-card p {
-  color: var(--text-secondary);
-  font-size: 15px;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
 }
+
 
 /* ===========================
    HOW IT WORKS
 =========================== */
 
+/* SECTION */
 .how-section {
-  padding: 90px 0;
+  padding: 100px 0;
+  background: radial-gradient(circle at top, #0a1a3a, #020617);
+}
+
+/* TITLE */
+.how-section h2 {
+  color: #fff;
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.how-section p {
+  color: #94a3b8;
+}
+
+
+/* STEP CARD */
+.step-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* GLOW BORDER */
+.step-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, #2563eb, #38bdf8, #9333ea);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* HOVER */
+.step-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+}
+
+/* STEP NUMBER (CIRCLE GLOW) */
+.step-number {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+}
+
+/* TITLE */
+.step-card h4 {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* CONNECTING LINE (DESKTOP ONLY) */
+@media (min-width: 992px) {
+  .how-section .row::before {
+    content: "";
+    position: absolute;
+    top: 35px;
+    left: 8%;
+    width: 84%;
+    height: 2px;
+    background: linear-gradient(to right, #2563eb, #38bdf8, #9333ea);
+    z-index: 0;
+  }
+
+  .step-card {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .step-card {
@@ -335,36 +387,57 @@
 =========================== */
 
 .category-section {
-  padding: 90px 0;
+  background: linear-gradient(135deg, #190d5e, #2b1bb5);
 }
 
+/* Card Styling */
 .category-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  background: #ffffff;
   border-radius: 16px;
-  padding: 25px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  padding: 20px 10px;
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-.category-card:hover {
-  border-color: var(--secondary);
-  transform: translateY(-3px);
-}
-
-.category-card svg {
+/* Icon */
+.category-card .icon {
   font-size: 32px;
-  color: var(--secondary);
+  color: #2b1bb5;
 }
 
-.category-card h5 {
-  color: var(--text-primary);
-  margin: 0;
-  font-size: 18px;
+/* Text */
+.category-card h6 {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Arrow */
+.category-card .arrow {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  font-size: 14px;
+  color: #999;
+  transition: 0.3s;
+}
+
+/* Hover Effects */
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  background: #2b1bb5;
+}
+
+.category-card:hover h6,
+.category-card:hover .icon {
+  color: #fff;
+}
+
+.category-card:hover .arrow {
+  color: #fff;
+  transform: translateX(5px);
 }
 
 /* ===========================

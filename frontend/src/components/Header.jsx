@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../assets/logo.png";
+
+import main_logo from "../assets/main-logo.png";
+
 import "./Header.css";
 
 const Header = () => {
@@ -14,8 +16,8 @@ const Header = () => {
         
         {/* Brand */}
         <Link to="/" className="brand-link" onClick={closeMenu}>
-          <img src={logo} alt="Logo" className="brand-logo" />
-          <span className="brand-title">UJWAL RADIANT VISION</span>
+          <img src={main_logo} alt="Logo" className="brand-logo"  />
+          
         </Link>
 
         {/* Mobile Toggle Button */}

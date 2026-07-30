@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom"; // IMPORTED useLocation
 import api from "../../service/api";
-import "./css/Dashboard.css";
+
 import "./css/CreateAssessment.css";
 
 const CreateAssessment = () => {

@@ -1,7 +1,9 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./css/dashboard.css";
-import logo from "../../assets/logo.png";
+
+
+import main_logo from "../../assets/main-logo.png";
 
 const CandidateLayout = () => {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const CandidateLayout = () => {
       {/* Sidebar */}
       <nav className="sidebar">
         <img
-          src={logo}
+          src={main_logo}
           className="sidebar-logo"
           alt="logo"
         />

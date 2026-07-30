@@ -6,7 +6,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #0b0f17; /* Deep matte slate/black */
+
+  background: rgba(2, 6, 23, 0.85);
   border-bottom: 1px solid #1e2638;
   z-index: 1000;
 }
@@ -36,7 +37,7 @@
 }
 
 .brand-logo {
-  height: 32px;
+  height: 79px;
   width: auto;
   object-fit: contain;
 }

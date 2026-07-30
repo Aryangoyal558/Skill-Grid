@@ -17,13 +17,7 @@
   transition: .4s ease;
 }
 
-body.light-theme .app-layout{
-  background:
-    radial-gradient(circle at top left,#dbeafe,transparent 40%),
-    radial-gradient(circle at bottom right,#bfdbfe,transparent 40%),
-    linear-gradient(180deg,#ffffff,#eff6ff);
-}
-
 .main-content{
     min-height:calc(100vh - 80px);
+    padding: 0;
 }
