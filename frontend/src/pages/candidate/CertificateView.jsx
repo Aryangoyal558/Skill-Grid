@@ -19,13 +19,17 @@ const CertificateView = () => {
         withCredentials: true,
       });
 
-      setCertificates(response.data.certificates || []);
+      // Flexible handling whether backend returns array directly or wrapped in { certificates: [...] }
+      const certList = Array.isArray(response.data) 
+        ? response.data 
+        : response.data.certificates || [];
+
+      setCertificates(certList);
     } catch (err) {
       if (err.response?.status === 401) {
         navigate("/login");
       }
-
-      console.log(err);
+      console.error("Error fetching certificates:", err);
     } finally {
       setLoading(false);
     }
@@ -58,27 +62,45 @@ const CertificateView = () => {
               </p>
             ) : (
               <div className="row g-4">
-                {certificates.map((cert) => (
-                  <div className="col-md-6" key={cert._id}>
-                    <div className="certificate-card">
-                      <div>
-                        <h5>{cert.assessmentTitle}</h5>
+                {certificates.map((cert) => {
+                  // Fallback for assessment title depending on flat vs nested payload
+                  const assessmentTitle =
+                    cert.assessmentTitle ||
+                    cert.assessment?.title ||
+                    cert.assessment?.name ||
+                    "Skill Assessment";
 
-                        <p>
-                          Issued:{" "}
-                          {new Date(cert.issueDate).toLocaleDateString()}
-                        </p>
+                  // Safe date formatting
+                  const formattedDate = cert.issueDate
+                    ? new Date(cert.issueDate).toLocaleDateString()
+                    : "N/A";
+
+                  // Extract code safely
+                  const certCode = cert.certificateCode || cert.certificateNumber || cert._id;
+
+                  return (
+                    <div className="col-md-6" key={cert._id}>
+                      <div className="certificate-card p-3 border rounded shadow-sm">
+                        <div>
+                          <h5 className="fw-bold">{assessmentTitle}</h5>
+                          <p className="text-muted mb-2">
+                            Issued: {formattedDate}
+                          </p>
+                          <p className="small text-secondary mb-3">
+                            Code: <code>{certCode}</code>
+                          </p>
+                        </div>
+
+                        <Link
+                          to={`/candidate/verify-certificate/${certCode}`}
+                          className="btn btn-primary btn-sm"
+                        >
+                          View & Verify
+                        </Link>
                       </div>
-
-                      <Link
-                        to={`/candidate/verify-certificate/${cert.certificateCode}`}
-                        className="btn btn-primary btn-sm"
-                      >
-                        View & Verify
-                      </Link>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

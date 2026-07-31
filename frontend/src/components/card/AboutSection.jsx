@@ -45,7 +45,7 @@ function AboutSection() {
             <h1 className="hero-title">
               Welcome to the <span>Online</span>
               <br />
-              Learning Center
+              Assessment Center
             </h1>
 
             <div className="quote-box">

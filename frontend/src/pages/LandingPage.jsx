@@ -24,7 +24,7 @@ const LandingPage = () => {
   const features = [
     {
       icon: <FaBrain />,
-      title: "AI Skill Assessment",
+      title: "Skill Assessment",
       text: "Industry-standard assessments designed to evaluate practical knowledge and technical skills.",
     },
     {
@@ -73,7 +73,7 @@ const LandingPage = () => {
         <div className="row align-items-center">
           <div className="col-lg-6">
             <span className="hero-badge">
-              🚀 AI Powered Assessment Platform
+              🚀 Assessment Platform
             </span>
 
             <h1 className="hero-title">

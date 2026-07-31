@@ -39,10 +39,10 @@ const TakeAssessment = () => {
         `http://localhost:8081/question/assessment/${assessmentId}`,
         {
           withCredentials: true,
-        },
+        }
       );
 
-      setQuestions(res.data.questions);
+      setQuestions(res.data.questions || []);
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     } finally {
@@ -50,11 +50,12 @@ const TakeAssessment = () => {
     }
   };
 
-  const handleAnswer = (questionId, option) => {
-    setAnswers({
-      ...answers,
-      [questionId]: option,
-    });
+  // SAVE INDEX (0, 1, 2, 3) TO MATCH DATABASE `correctAnswer` NUMBER FIELD
+  const handleAnswer = (questionId, optionIndex) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionId]: Number(optionIndex),
+    }));
   };
 
   const nextQuestion = () => {
@@ -72,7 +73,6 @@ const TakeAssessment = () => {
   const submitExam = async (autoSubmit = false) => {
     if (!autoSubmit) {
       const ok = window.confirm("Are you sure you want to submit?");
-
       if (!ok) return;
     }
 
@@ -81,15 +81,14 @@ const TakeAssessment = () => {
         "http://localhost:8081/result",
         {
           assessment: assessmentId,
-          answers,
+          answers: answers, // Sends object format: { "questionId": 0, "questionId2": 1 }
         },
         {
           withCredentials: true,
-        },
+        }
       );
 
-      alert(res.data.message);
-
+      alert(res.data.message || "Assessment Submitted!");
       navigate("/candidate/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -120,6 +119,7 @@ const TakeAssessment = () => {
   }
 
   const question = questions[currentQuestion];
+
   return (
     <div className="container-fluid py-4 bg-light min-vh-100">
       {/* Header Card */}
@@ -151,13 +151,12 @@ const TakeAssessment = () => {
                 {questions.map((q, index) => (
                   <button
                     key={q._id}
-                    className={`btn rounded-circle 
-                    ${
+                    className={`btn rounded-circle ${
                       currentQuestion === index
                         ? "btn-primary"
-                        : answers[q._id]
-                          ? "btn-success"
-                          : "btn-outline-secondary"
+                        : answers[q._id] !== undefined
+                        ? "btn-success"
+                        : "btn-outline-secondary"
                     }`}
                     style={{
                       width: "45px",
@@ -176,11 +175,9 @@ const TakeAssessment = () => {
                 <p>
                   <span className="badge bg-primary">Current</span>
                 </p>
-
                 <p>
                   <span className="badge bg-success">Answered</span>
                 </p>
-
                 <p>
                   <span className="badge bg-secondary">Not Attempted</span>
                 </p>
@@ -205,26 +202,22 @@ const TakeAssessment = () => {
                 {question.options.map((option, index) => (
                   <label
                     key={index}
-                    className={`card p-3 option-card 
-                    ${
-                      answers[question._id] === option
+                    className={`card p-3 option-card ${
+                      answers[question._id] === index
                         ? "border-primary bg-primary-subtle"
                         : ""
                     }`}
-                    style={{
-                      cursor: "pointer",
-                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     <div className="form-check">
                       <input
                         className="form-check-input"
                         type="radio"
                         name={question._id}
-                        value={option}
-                        checked={answers[question._id] === option}
+                        value={index}
+                        checked={answers[question._id] === index}
                         onChange={() => handleAnswer(question._id, index)}
                       />
-
                       <span className="ms-2">{option}</span>
                     </div>
                   </label>
@@ -232,7 +225,6 @@ const TakeAssessment = () => {
               </div>
 
               {/* Navigation Buttons */}
-
               <div className="d-flex justify-content-between mt-5">
                 <button
                   className="btn btn-outline-secondary px-4"
@@ -243,7 +235,10 @@ const TakeAssessment = () => {
                 </button>
 
                 {currentQuestion === questions.length - 1 ? (
-                  <button className="btn btn-success px-4" onClick={submitExam}>
+                  <button
+                    className="btn btn-success px-4"
+                    onClick={() => submitExam(false)}
+                  >
                     Submit Exam ✓
                   </button>
                 ) : (

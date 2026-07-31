@@ -52,15 +52,6 @@ const Dashboard = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await api.post("/auth/logout", {});
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-    navigate("/login");
-  };
-
   if (loading) {
     return (
       <div className="loading-container">
@@ -72,128 +63,143 @@ const Dashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="candidate-dashboard-container">
-      {/* Header */}
-      <header className="dashboard-header flex justify-between items-center p-4">
-        <div>
-          <h1 className="text-2xl font-bold">Welcome, {user.name} 👋</h1>
-          <p className="text-sm user-subtext">
-            {user.email} | Role: <span className="capitalize">{user.role}</span>
-          </p>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="logout-btn px-4 py-2 rounded-lg transition-colors text-sm"
-        >
-          Logout
-        </button>
-      </header>
-
-      {/* KPI Stats Section */}
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-md-3 pb-2">
-            <div className="stat-card blue-stat">
-              <h3>Account Status</h3>
-              <h2>{user.isVerified ? "Verified" : "Pending"}</h2>
-              <i className="fas fa-user-check stat-icon"></i>
-            </div>
-          </div>
-
-          <div className="col-md-3 pb-2">
-            <div className="stat-card green-stat">
-              <h3>Available Tests</h3>
-              <h2>{assessments.length}</h2>
-              <i className="fas fa-file-alt stat-icon"></i>
-            </div>
-          </div>
-
-          <div className="col-md-3 pb-2">
-            <div className="stat-card purple-stat">
-              <h3>Certificates</h3>
-              <h2>{certificates.length}</h2>
-              <i className="fas fa-award stat-icon"></i>
-            </div>
-          </div>
-
-          <div className="col-md-3 pb-2">
-            <div className="stat-card orange-stat">
-              <h3>Role</h3>
-              <h2 className="capitalize">{user.role}</h2>
-              <i className="fas fa-user-tag stat-icon"></i>
-            </div>
-          </div>
-        </div>
+    <div className="dashboard-page-container">
+      {/* Dashboard Section Heading */}
+      <div className="dashboard-header-title">
+        <h1>DASHBOARD</h1>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="container mt-4">
-        <div className="row">
+      {/* Main Dashboard Content */}
+      <div className="dashboard-body">
+        {/* KPI Cards Row */}
+        <div className="kpi-cards-grid">
+          {/* Account Status */}
+          <div className="kpi-card card-yellow">
+            <div className="kpi-info">
+              <span className="kpi-value">{user.isVerified ? "100%" : "50%"}</span>
+              <span className="kpi-label">ACCOUNT STATUS</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fas fa-user-check"></i>
+            </div>
+          </div>
+
+          {/* Available Tests */}
+          <div className="kpi-card card-purple">
+            <div className="kpi-info">
+              <span className="kpi-value">{assessments.length}</span>
+              <span className="kpi-label">AVAILABLE TESTS</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fas fa-file-alt"></i>
+            </div>
+          </div>
+
+          {/* Certificates */}
+          <div className="kpi-card card-cyan">
+            <div className="kpi-info">
+              <span className="kpi-value">{certificates.length}</span>
+              <span className="kpi-label">CERTIFICATES</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fas fa-award"></i>
+            </div>
+          </div>
+
+          {/* Role */}
+          <div className="kpi-card card-pink">
+            <div className="kpi-info">
+              <span className="kpi-value capitalize">{user.role}</span>
+              <span className="kpi-label">CURRENT ROLE</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fas fa-user-tag"></i>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Row 1 */}
+        <div className="content-grid-row two-cols">
           {/* Profile Card */}
-          <div className="col-md-5 pb-2">
-            <div className="dashboard-card">
-              <div className="card-header mb-3">
-                <h2 className="text-xl font-bold">Profile Information</h2>
+          <div className="dashboard-card">
+            <div className="card-header">
+              <h3>
+                <i className="fas fa-id-card card-title-icon"></i> Profile Information
+              </h3>
+              <div className="card-controls">
+                <span>+</span>
+                <span>×</span>
               </div>
-              <div className="profile-info-list">
-                <p>
-                  <b>Name:</b> <span>{user.name}</span>
-                </p>
-                <p>
-                  <b>Email:</b> <span>{user.email}</span>
-                </p>
-                <p>
-                  <b>Phone:</b> <span>{user.phone_no || "Not Added"}</span>
-                </p>
-                <p>
-                  <b>Verified:</b> <span>{user.isVerified ? "Yes" : "No"}</span>
-                </p>
+            </div>
+            <div className="card-body">
+              <div className="profile-details-list">
+                <div className="profile-detail-item">
+                  <span className="detail-label">Full Name</span>
+                  <span className="detail-value">{user.name}</span>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Email Address</span>
+                  <span className="detail-value">{user.email}</span>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Phone Number</span>
+                  <span className="detail-value">{user.phone_no || "Not Added"}</span>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Verification</span>
+                  <span className={`detail-value ${user.isVerified ? "status-verified" : "status-pending"}`}>
+                    {user.isVerified ? "VERIFIED ✓" : "PENDING"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Available Skill Assessments Section */}
-          <div className="col-md-7 pb-2">
-            <div className="dashboard-card">
-              <h2 className="text-xl font-bold mb-2">
-                Available Skill Assessments
-              </h2>
-              <p className="card-subtitle mb-4">
-                Select an assessment to start your evaluation.
-              </p>
-
+          {/* Available Skill Assessments Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <h3>
+                <i className="fas fa-laptop-code card-title-icon"></i> Available Skill Assessments
+              </h3>
+              <div className="card-controls">
+                <span>+</span>
+                <span>×</span>
+              </div>
+            </div>
+            <div className="card-body">
+              <p className="card-subtext mb-3">Select an assessment to evaluate your skills.</p>
               {assessments.length === 0 ? (
-                <p className="empty-text">
-                  No published assessments available right now.
-                </p>
+                <div className="empty-state">
+                  <i className="fas fa-inbox"></i>
+                  <p>No published assessments available right now.</p>
+                </div>
               ) : (
-                <div className="space-y-3">
+                <div className="items-list">
                   {assessments.map((test) => (
-                    <div key={test._id} className="list-item">
-                      <div className="list-item-left flex items-center gap-3">
-                        <i className="fas fa-code icon-badge"></i>
+                    <div key={test._id} className="list-item-card">
+                      <div className="list-item-info">
+                        <i className="fas fa-code item-icon"></i>
                         <div>
-                          <strong className="block item-title">
-                            {test.title}
-                          </strong>
+                          <strong className="item-title">{test.title}</strong>
                           <p className="item-subtext">
-                            Duration: {test.timeLimit} mins | Passing Score:{" "}
-                            {test.minPassScore}%
+                            Duration: {test.timeLimit} mins | Pass Score: {test.minPassScore}%
                           </p>
                         </div>
                       </div>
-                      {test.attempted ? (
-                        <button disabled className="btn-completed">
-                          Completed ✓
-                        </button>
-                      ) : (
-                        <Link
-                          to={`/candidate/assessment/${test._id}`}
-                          className="btn-start"
-                        >
-                          Start Test
-                        </Link>
-                      )}
+                      <div className="list-item-action">
+                        {test.attempted ? (
+                          <button disabled className="btn-completed">
+                            Completed ✓
+                          </button>
+                        ) : (
+                          <Link
+                            to={`/candidate/assessment/${test._id}`}
+                            className="btn-start"
+                          >
+                            Start Test
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -201,31 +207,37 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Certificates Section */}
-      <div className="container mt-4 mb-6">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="dashboard-card">
-              <h2 className="text-xl font-bold mb-3">Earned Certificates</h2>
+        {/* Certificates Section */}
+        <div className="content-grid-row full-width">
+          <div className="dashboard-card">
+            <div className="card-header">
+              <h3>
+                <i className="fas fa-graduation-cap card-title-icon"></i> Earned Certificates
+              </h3>
+              <div className="card-controls">
+                <span>+</span>
+                <span>×</span>
+              </div>
+            </div>
+            <div className="card-body">
               {certificates.length === 0 ? (
-                <p className="empty-text">
-                  No certificates earned yet. Complete and pass an assessment to
-                  issue your digital certificate.
-                </p>
+                <div className="empty-state">
+                  <i className="fas fa-award"></i>
+                  <p>No certificates earned yet. Pass an assessment to issue your digital certificate.</p>
+                </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="certificates-grid">
                   {certificates.map((cert) => (
-                    <div key={cert._id} className="cert-card">
-                      <div>
-                        <strong className="item-title">
-                          {cert.assessmentTitle}
-                        </strong>
-                        <p className="item-subtext">
-                          Issued:{" "}
-                          {new Date(cert.issueDate).toLocaleDateString()}
-                        </p>
+                    <div key={cert._id} className="certificate-card-item">
+                      <div className="cert-card-left">
+                        <i className="fas fa-certificate cert-icon"></i>
+                        <div>
+                          <strong className="cert-title">{cert.assessmentTitle}</strong>
+                          <p className="cert-date">
+                            Issued: {new Date(cert.issueDate).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
                       <Link
                         to={`/candidate/verify-certificate/${cert.certificateCode}`}
