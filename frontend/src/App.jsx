@@ -135,7 +135,7 @@ import AssessmentList from "./pages/examiner/AssessmentList";
 import EditQuestion from "./pages/examiner/EditQuestion";
 import ViewResults from "./pages/examiner/ViewResult";
 import SelectSkill from "./pages/examiner/SelectSkill";
-
+import Analytics from "./pages/examiner/Analytics";
 // Admin
 import AdminDashboard from "./pages/admin/Dashboard";
 
@@ -186,6 +186,7 @@ function App() {
           path="/examiner/manage-questions/:assessmentId"
           element={<ManageQuestions />}
         />
+        <Route path="/examiner/analytics" element={<Analytics />} />
         <Route
           path="/examiner/dashboard"
           element={
