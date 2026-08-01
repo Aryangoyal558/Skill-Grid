@@ -38,7 +38,10 @@ const CreateAssessment = () => {
       
       const createdId = res.data?.assessment?._id || res.data?._id;
       if (createdId) {
-        navigate(`/examiner/manage-questions/${createdId}`);
+        // FIX: Pass the skillId in the background state!
+        navigate(`/examiner/manage-questions/${createdId}`, {
+          state: { skillId: form.skillId }
+        });
       } else {
         navigate("/examiner/assessments");
       }
