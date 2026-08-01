@@ -43,7 +43,6 @@ const Analytics = () => {
         axios.get("http://localhost:8081/examiner/assessment", { withCredentials: true })
       ]);
 
-      // Robust parsing in case the backend sends an array directly instead of an object
       setSkills(Array.isArray(skillsRes.data) ? skillsRes.data : skillsRes.data.skills || []);
       setAssessmentsList(Array.isArray(assessRes.data) ? assessRes.data : assessRes.data.assessments || []);
     } catch (err) {
@@ -61,7 +60,19 @@ const Analytics = () => {
       });
 
       setStats(res.data.stats);
-      setPerformanceData(res.data.performanceData || []);
+
+      const rawData = res.data.performanceData || [];
+      const formattedData = rawData.map((item) => ({
+        ...item,
+        candidateName: item.candidateName || item.candidate?.name || "Candidate",
+        assessmentTitle: item.assessmentTitle || item.assessment?.title || "Assessment",
+        category: item.category || item.assessment?.skillId?.name || item.assessment?.skill?.name || "General",
+        score: Number(item.score) || 0,
+        result: item.result || item.status || "N/A",
+        date: item.date || item.submittedAt || item.createdAt
+      }));
+
+      setPerformanceData(formattedData);
     } catch (err) {
       console.error("Failed to load analytics", err);
       if (err.response?.status === 401) navigate("/login");
@@ -70,14 +81,18 @@ const Analytics = () => {
     }
   };
 
-  // BUGFIX: escape values that contain commas, quotes, or newlines so the CSV
-  // doesn't silently corrupt/shift columns (e.g. "Smith, John" used to break it).
   const escapeCSVField = (value) => {
     const str = String(value ?? "");
     if (/[",\n]/.test(str)) {
       return `"${str.replace(/"/g, '""')}"`;
     }
     return str;
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    const parsed = new Date(dateStr);
+    return isNaN(parsed.getTime()) ? "N/A" : parsed.toLocaleDateString();
   };
 
   const exportToCSV = () => {
@@ -89,7 +104,7 @@ const Analytics = () => {
       row.category,
       row.score,
       row.result,
-      new Date(row.date).toLocaleDateString()
+      formatDate(row.date)
     ].map(escapeCSVField));
 
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
@@ -102,7 +117,6 @@ const Analytics = () => {
     document.body.removeChild(link);
   };
 
-  // New: PDF export, hits the backend /analytics/export/pdf endpoint (AC 45)
   const exportToPDF = async () => {
     if (performanceData.length === 0) return alert("No data to export");
     setExportingPDF(true);
@@ -110,9 +124,22 @@ const Analytics = () => {
       const queryParams = buildQueryParams();
       const res = await axios.get(
         `http://localhost:8081/analytics/export/pdf?${queryParams.toString()}`,
-        { withCredentials: true, responseType: "blob" }
+        { 
+          withCredentials: true, 
+          responseType: "blob" 
+        }
       );
 
+      // Check if response is a JSON error wrapped inside a Blob
+      if (res.data.type === "application/json") {
+        const text = await res.data.text();
+        const errorJson = JSON.parse(text);
+        console.error("Backend Error Details:", errorJson);
+        alert(`Error: ${errorJson.message || "Failed to generate PDF"}`);
+        return;
+      }
+
+      // Download PDF
       const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
       const link = document.createElement("a");
       link.href = blobUrl;
@@ -121,9 +148,14 @@ const Analytics = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
+
     } catch (err) {
-      console.error("Failed to export PDF", err);
-      alert("Failed to generate PDF report.");
+      console.error("Failed to export PDF:", err);
+      if (err.response && err.response.data instanceof Blob) {
+        const errText = await err.response.data.text();
+        console.error("Decoded Error:", errText);
+      }
+      alert("Failed to generate PDF report. See browser console for details.");
     } finally {
       setExportingPDF(false);
     }
@@ -196,7 +228,7 @@ const Analytics = () => {
                       <i className="fa-solid fa-chart-column text-info"></i> Recent Scores Trend
                     </h3>
                   </div>
-                  <div className="card-body" style={{ height: "300px" }}>
+                  <div className="card-body" style={{ height: "300px", width: "100%", minHeight: "300px" }}>
                     {performanceData.length === 0 ? (
                        <p className="text-center text-muted mt-5">No data for chart</p>
                     ) : (
@@ -239,7 +271,7 @@ const Analytics = () => {
                           <tbody>
                             {performanceData.map((row, index) => (
                               <tr key={index} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                                <td className="py-2 text-white fw-bold">{row.candidateName} <br/><small className="text-muted fw-normal">{new Date(row.date).toLocaleDateString()}</small></td>
+                                <td className="py-2 text-white fw-bold">{row.candidateName} <br/><small className="text-muted fw-normal">{formatDate(row.date)}</small></td>
                                 <td className="py-2 text-light">{row.assessmentTitle} <br/><small className="text-info fw-normal">{row.category}</small></td>
                                 <td className="py-2 text-center fw-bold">{row.score}</td>
                                 <td className="py-2 text-end">

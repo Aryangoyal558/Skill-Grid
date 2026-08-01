@@ -6,11 +6,20 @@ const router = express.Router();
 const authenticateUser = require("../middlewares/auth.middleware"); 
 const reportController = require("../controllers/report.controller");
 
-// The final URL will be: GET /analytics/dashboard
+// 1. Dashboard JSON data endpoint
+// Final URL: GET /analytics/dashboard
 router.get(
     "/dashboard",
     authenticateUser,
     reportController.getAnalyticsDashboard
+);
+
+// 2. PDF Export endpoint (ADDED THIS)
+// Final URL: GET /analytics/export/pdf
+router.get(
+    "/export/pdf",
+    authenticateUser,
+    reportController.exportAnalyticsPDF
 );
 
 module.exports = router;

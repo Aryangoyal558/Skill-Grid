@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import "./css/Dashboard.css";
 
 const TakeAssessment = () => {
   const { assessmentId } = useParams();
@@ -104,152 +105,176 @@ const TakeAssessment = () => {
 
   if (loading) {
     return (
-      <h2 style={{ textAlign: "center", marginTop: "100px" }}>
-        Loading Questions...
-      </h2>
+      <div className="d-flex justify-content-center align-items-center vh-100 text-light">
+        <div className="spinner-border text-cyan" role="status"></div>
+        <span className="ms-3 fw-semibold fs-5">Loading Questions...</span>
+      </div>
     );
   }
 
   if (questions.length === 0) {
     return (
-      <h2 style={{ textAlign: "center", marginTop: "100px" }}>
-        No Questions Found
-      </h2>
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100 text-light">
+        <i className="fas fa-exclamation-triangle text-warning fs-1 mb-3"></i>
+        <h2 className="fw-bold">No Questions Found</h2>
+      </div>
     );
   }
 
   const question = questions[currentQuestion];
 
   return (
-    <div className="container-fluid py-4 bg-light min-vh-100">
-      {/* Header Card */}
-      <div className="card shadow-sm border-0 mb-4">
-        <div className="card-body d-flex justify-content-between align-items-center">
-          <div>
-            <h2 className="fw-bold mb-1">📝 Online Assessment</h2>
-            <p className="text-muted mb-0">
-              Complete all questions before time runs out
-            </p>
-          </div>
-
-          <div className="badge bg-danger fs-5 px-4 py-3">
-            ⏰ {formatTime()}
-          </div>
+    <div className="profile-dashboard-wrapper p-4 text-white min-vh-100">
+      {/* Top Banner Header */}
+      <header className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+        <div>
+          <h1 className="fw-bold fs-2 m-0 text-white d-flex align-items-center gap-2">
+            <span>Online <span className="theme-gradient-text">Assessment</span></span>
+            <span className="fs-3">📝</span>
+          </h1>
+          <p className="subtext-gray m-0 mt-1 fs-6">
+            Complete all questions before time runs out.
+          </p>
         </div>
-      </div>
 
+        {/* Cyber Countdown Badge */}
+        <div className="cyber-timer-pill">
+          <i className="far fa-clock me-2"></i>
+          <span>{formatTime()}</span>
+        </div>
+      </header>
+
+      {/* Main Examination Layout */}
       <div className="row g-4">
-        {/* Question Palette */}
+        {/* Question Palette Sidebar */}
         <div className="col-lg-3 col-md-4">
-          <div className="card shadow-sm border-0 h-100">
-            <div className="card-header bg-primary text-white">
-              <h5 className="mb-0">Questions</h5>
-            </div>
-
-            <div className="card-body">
-              <div className="d-flex flex-wrap gap-2">
-                {questions.map((q, index) => (
-                  <button
-                    key={q._id}
-                    className={`btn rounded-circle ${
-                      currentQuestion === index
-                        ? "btn-primary"
-                        : answers[q._id] !== undefined
-                        ? "btn-success"
-                        : "btn-outline-secondary"
-                    }`}
-                    style={{
-                      width: "45px",
-                      height: "45px",
-                    }}
-                    onClick={() => setCurrentQuestion(index)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-
-              <hr />
-
-              <div className="small">
-                <p>
-                  <span className="badge bg-primary">Current</span>
-                </p>
-                <p>
-                  <span className="badge bg-success">Answered</span>
-                </p>
-                <p>
-                  <span className="badge bg-secondary">Not Attempted</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Question Section */}
-        <div className="col-lg-9 col-md-8">
-          <div className="card shadow border-0">
-            <div className="card-body p-4">
-              <div className="mb-4">
-                <span className="badge bg-dark fs-6">
-                  Question {currentQuestion + 1} / {questions.length}
+          <div className="cyber-card p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                <h5 className="fw-bold text-white m-0 fs-6 text-uppercase tracking-wider">
+                  Question Palette
+                </h5>
+                <span className="info-chip fs-7">
+                  {Object.keys(answers).length}/{questions.length} Answered
                 </span>
               </div>
 
-              <h3 className="fw-bold mb-4">{question.question}</h3>
+              {/* Grid of Question Circles */}
+              <div className="d-flex flex-wrap gap-2 justify-content-start">
+                {questions.map((q, index) => {
+                  const isCurrent = currentQuestion === index;
+                  const isAnswered = answers[q._id] !== undefined;
 
+                  return (
+                    <button
+                      key={q._id}
+                      className={`palette-num-btn ${
+                        isCurrent
+                          ? "palette-current"
+                          : isAnswered
+                          ? "palette-answered"
+                          : "palette-unanswered"
+                      }`}
+                      onClick={() => setCurrentQuestion(index)}
+                    >
+                      {index + 1}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Legend Section */}
+            <div className="mt-4 pt-3 border-top border-secondary border-opacity-25">
+              <div className="d-flex flex-column gap-2 small">
+                <div className="d-flex align-items-center gap-2">
+                  <span className="legend-dot bg-cyan"></span>
+                  <span className="subtext-gray">Current Question</span>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="legend-dot bg-green"></span>
+                  <span className="subtext-gray">Answered</span>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="legend-dot bg-gray"></span>
+                  <span className="subtext-gray">Not Attempted</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Question Content View */}
+        <div className="col-lg-9 col-md-8">
+          <div className="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+              {/* Question Number Badge */}
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <span className="question-counter-badge">
+                  Question {currentQuestion + 1} of {questions.length}
+                </span>
+              </div>
+
+              {/* Question Text */}
+              <h3 className="fw-bold text-white mb-4 fs-4 leading-relaxed">
+                {question.question}
+              </h3>
+
+              {/* Options Grid */}
               <div className="d-flex flex-column gap-3">
-                {question.options.map((option, index) => (
-                  <label
-                    key={index}
-                    className={`card p-3 option-card ${
-                      answers[question._id] === index
-                        ? "border-primary bg-primary-subtle"
-                        : ""
-                    }`}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <div className="form-check">
+                {question.options.map((option, index) => {
+                  const isSelected = answers[question._id] === index;
+
+                  return (
+                    <label
+                      key={index}
+                      className={`option-row-card p-3 rounded-3 d-flex align-items-center gap-3 cursor-pointer ${
+                        isSelected ? "option-selected" : ""
+                      }`}
+                      style={{ cursor: "pointer" }}
+                    >
                       <input
-                        className="form-check-input"
+                        className="form-check-input flex-shrink-0 theme-radio"
                         type="radio"
                         name={question._id}
                         value={index}
-                        checked={answers[question._id] === index}
+                        checked={isSelected}
                         onChange={() => handleAnswer(question._id, index)}
                       />
-                      <span className="ms-2">{option}</span>
-                    </div>
-                  </label>
-                ))}
+                      <span className="option-text fs-6 fw-medium text-white">
+                        {option}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
+            </div>
 
-              {/* Navigation Buttons */}
-              <div className="d-flex justify-content-between mt-5">
+            {/* Navigation Controls */}
+            <div className="d-flex justify-content-between align-items-center mt-5 pt-3 border-top border-secondary border-opacity-25">
+              <button
+                className="cyber-btn secondary-glow"
+                onClick={previousQuestion}
+                disabled={currentQuestion === 0}
+              >
+                <i className="fas fa-arrow-left me-2"></i> Previous
+              </button>
+
+              {currentQuestion === questions.length - 1 ? (
                 <button
-                  className="btn btn-outline-secondary px-4"
-                  onClick={previousQuestion}
-                  disabled={currentQuestion === 0}
+                  className="cyber-btn success-glow"
+                  onClick={() => submitExam(false)}
                 >
-                  ← Previous
+                  Submit Exam <i className="fas fa-check-circle ms-2"></i>
                 </button>
-
-                {currentQuestion === questions.length - 1 ? (
-                  <button
-                    className="btn btn-success px-4"
-                    onClick={() => submitExam(false)}
-                  >
-                    Submit Exam ✓
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-primary px-4"
-                    onClick={nextQuestion}
-                  >
-                    Next →
-                  </button>
-                )}
-              </div>
+              ) : (
+                <button
+                  className="cyber-btn primary-glow"
+                  onClick={nextQuestion}
+                >
+                  Next <i className="fas fa-arrow-right ms-2"></i>
+                </button>
+              )}
             </div>
           </div>
         </div>
