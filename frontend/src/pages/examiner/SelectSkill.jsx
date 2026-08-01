@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Dashboard.css";
@@ -6,10 +6,12 @@ import "./css/SelectSkill.css";
 
 const SelectSkill = () => {
   const navigate = useNavigate();
+  const formRef = useRef(null);
+
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // New state to toggle the "Add Skill" form
+  // State to toggle the "Add Skill" form
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSkill, setNewSkill] = useState({ name: "", description: "" });
 
@@ -22,7 +24,7 @@ const SelectSkill = () => {
       const res = await axios.get("http://localhost:8081/skill", {
         withCredentials: true,
       });
-      setSkills(res.data.skills);
+      setSkills(res.data.skills || []);
     } catch (err) {
       console.error("Failed to load skills", err);
     } finally {
@@ -36,16 +38,13 @@ const SelectSkill = () => {
     });
   };
 
-  // Function to save a brand new skill to the database
   const handleCreateNewSkill = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:8081/skill", newSkill, {
         withCredentials: true,
       });
-      // Add the new skill to the screen immediately
       setSkills([...skills, res.data.skill]);
-      // Reset and hide the form
       setNewSkill({ name: "", description: "" });
       setShowAddForm(false);
     } catch (err) {
@@ -53,194 +52,205 @@ const SelectSkill = () => {
     }
   };
 
-  return (
-    <div className="dashboard-layout">
-      {/* Sidebar */}
-      <nav className="sidebar">
-        <div
-          className="sidebar-logo"
-          style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb" }}
-        >
-          URV
-        </div>
-        <button
-          className="nav-item"
-          onClick={() => navigate("/examiner/dashboard")}
-          title="Dashboard"
-        >
-          <i className="fas fa-home"></i>
-        </button>
-        <button
-          className="nav-item active"
-          onClick={() => navigate("/examiner/create-assessment")}
-          title="Create Assessment"
-        >
-          <i className="fas fa-plus-circle"></i>
-        </button>
-        <button
-          className="nav-item"
-          onClick={() => navigate("/examiner/assessments")}
-          title="My Assessments"
-        >
-          <i className="fas fa-list-ul"></i>
-        </button>
-        <div className="spacer"></div>
-      </nav>
+  const openForm = () => {
+    setShowAddForm(true);
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
+  };
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        <div
-          className="d-flex justify-content-between align-items-center flex-wrap"
+  return (
+    <div className="dashboard-page-container">
+      {/* Page Banner Header */}
+      <div
+        style={{
+          background: "linear-gradient(135deg, #4f46e5, #9333ea)",
+          color: "#fff",
+          padding: "24px 28px",
+          borderRadius: "16px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+          marginBottom: "24px",
+        }}
+      >
+        <h1
           style={{
-            background: "linear-gradient(135deg, #4f46e5, #9333ea)",
-            color: "#fff",
-            padding: "25px 30px",
-            borderRadius: "18px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-            marginBottom: "20px",
-            gap: "10px",
+            fontSize: "24px",
+            fontWeight: "800",
+            marginBottom: "6px",
+            color: "#ffffff",
           }}
         >
-          {/* Left Content */}
-          <div className="col-12 col-md-8 p-0">
-            <h1
-              style={{
-                fontSize: "36px",
-                fontWeight: "600",
-                marginBottom: "6px",
-              }}
-            >
-              Select Assessment Skill
-            </h1>
+          Select Assessment Skill
+        </h1>
+        <p style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.85)", margin: 0 }}>
+          Choose the technology or subject area for your new assessment.
+        </p>
+      </div>
 
-            <p
-              style={{
-                fontSize: "14px",
-                opacity: "0.4",
-                marginBottom: "0",
-              }}
+      {/* New Skill Form Modal / Overlay Box */}
+      {showAddForm && (
+        <div
+          ref={formRef}
+          style={{
+            background: "#1e293b",
+            border: "2px solid #38bdf8",
+            borderRadius: "16px",
+            padding: "24px",
+            marginBottom: "28px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+            animation: "fadeIn 0.3s ease-in-out",
+          }}
+        >
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h3 className="text-white fw-bold m-0" style={{ fontSize: "18px" }}>
+              <i className="fa-solid fa-folder-plus text-info me-2"></i>
+              Create New Category
+            </h3>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              onClick={() => setShowAddForm(false)}
+            ></button>
+          </div>
+
+          <form onSubmit={handleCreateNewSkill} className="d-flex flex-column gap-3">
+            <div>
+              <label className="text-light mb-1" style={{ fontSize: "13px" }}>
+                Category Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                style={{
+                  background: "#0f172a",
+                  border: "1px solid #334155",
+                  color: "#fff",
+                  padding: "10px 14px",
+                }}
+                value={newSkill.name}
+                onChange={(e) =>
+                  setNewSkill({ ...newSkill, name: e.target.value })
+                }
+                placeholder="e.g. Mathematics, Machine Learning"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-light mb-1" style={{ fontSize: "13px" }}>
+                Description
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                style={{
+                  background: "#0f172a",
+                  border: "1px solid #334155",
+                  color: "#fff",
+                  padding: "10px 14px",
+                }}
+                value={newSkill.description}
+                onChange={(e) =>
+                  setNewSkill({ ...newSkill, description: e.target.value })
+                }
+                placeholder="Briefly describe this category"
+                required
+              />
+            </div>
+
+            <div className="d-flex gap-2 mt-2">
+              <button
+                type="submit"
+                className="btn btn-info fw-bold text-white px-4 py-2"
+                style={{ borderRadius: "8px" }}
+              >
+                Save Category
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-secondary text-light px-4 py-2"
+                style={{ borderRadius: "8px" }}
+                onClick={() => setShowAddForm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Loading or Skills Grid */}
+      {loading ? (
+        <div
+          className="loading-container w-100 d-flex justify-content-center align-items-center"
+          style={{ minHeight: "50vh" }}
+        >
+          <div className="spinner-border text-info" role="status">
+            <span className="visually-hidden">Loading subjects...</span>
+          </div>
+        </div>
+      ) : (
+        <div className="kpi-cards-grid">
+          {skills.map((skill) => (
+            <div
+              key={skill._id}
+              className="dashboard-card text-center d-flex flex-column align-items-center justify-content-center p-4"
+              style={{ cursor: "pointer", transition: "transform 0.2s ease" }}
+              onClick={() => handleSelectSkill(skill)}
             >
-              Choose the technology or subject area for your new assessment.
+              <div className="mb-3">
+                <i className="fa-solid fa-laptop-code text-info fa-2x"></i>
+              </div>
+              <h4 className="text-white fw-bold mb-1" style={{ fontSize: "16px" }}>
+                {skill.name}
+              </h4>
+              <p className="card-subtext text-center m-0">{skill.description}</p>
+            </div>
+          ))}
+
+          {/* Uncategorized Card */}
+          <div
+            className="dashboard-card text-center d-flex flex-column align-items-center justify-content-center p-4"
+            style={{ cursor: "pointer", transition: "transform 0.2s ease" }}
+            onClick={() =>
+              handleSelectSkill({ _id: null, name: "Uncategorized" })
+            }
+          >
+            <div className="mb-3">
+              <i className="fa-solid fa-folder-open text-warning fa-2x"></i>
+            </div>
+            <h4 className="text-white fw-bold mb-1" style={{ fontSize: "16px" }}>
+              Uncategorized
+            </h4>
+            <p className="card-subtext text-center m-0">
+              Standard assessment without a specific subject category.
+            </p>
+          </div>
+
+          {/* Create New Card */}
+          <div
+            className="dashboard-card text-center d-flex flex-column align-items-center justify-content-center p-4"
+            onClick={openForm}
+            style={{
+              cursor: "pointer",
+              border: "2px dashed #38bdf8",
+              background: "rgba(56, 189, 248, 0.05)",
+            }}
+          >
+            <div className="mb-3">
+              <i className="fa-solid fa-plus text-info fa-2x"></i>
+            </div>
+            <h4 className="text-white fw-bold mb-1" style={{ fontSize: "16px" }}>
+              Add New Skill
+            </h4>
+            <p className="card-subtext text-center m-0">
+              Create a brand new subject category for the platform.
             </p>
           </div>
         </div>
-
-        {/* The New Skill Form (Hidden by default) */}
-        {showAddForm && (
-          <div
-            className="form-card"
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              border: "2px dashed #2563eb",
-            }}
-          >
-            <h3>Create New Category</h3>
-            <form onSubmit={handleCreateNewSkill}>
-              <div className="form-group">
-                <label>Category Name</label>
-                <input
-                  className="form-control"
-                  value={newSkill.name}
-                  onChange={(e) =>
-                    setNewSkill({ ...newSkill, name: e.target.value })
-                  }
-                  placeholder="e.g. Mathematics"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Description</label>
-                <input
-                  className="form-control"
-                  value={newSkill.description}
-                  onChange={(e) =>
-                    setNewSkill({ ...newSkill, description: e.target.value })
-                  }
-                  placeholder="Briefly describe this category"
-                  required
-                />
-              </div>
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  className="submit-btn"
-                  style={{ width: "auto", padding: "10px 20px" }}
-                >
-                  Save Category
-                </button>
-                <button
-                  type="button"
-                  className="logout-btn"
-                  onClick={() => setShowAddForm(false)}
-                  style={{
-                    width: "auto",
-                    padding: "10px 20px",
-                    background: "#f1f5f9",
-                    color: "#0f172a",
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {loading ? (
-          <h2>Loading subjects...</h2>
-        ) : (
-          <div className="skills-grid">
-            {/* 1. Map through dynamic database skills */}
-            {skills.map((skill) => (
-              <div
-                key={skill._id}
-                className="skill-card"
-                onClick={() => handleSelectSkill(skill)}
-              >
-                <div className="skill-icon">
-                  <i className="fas fa-laptop-code"></i>
-                </div>
-                <h3>{skill.name}</h3>
-                <p>{skill.description}</p>
-              </div>
-            ))}
-
-            {/* 2. Permanent "General / Uncategorized" Card */}
-            <div
-              className="skill-card"
-              onClick={() =>
-                handleSelectSkill({ _id: null, name: "Uncategorized" })
-              }
-            >
-              <div
-                className="skill-icon"
-                style={{ background: "#f1f5f9", color: "#64748b" }}
-              >
-                <i className="fas fa-folder-open"></i>
-              </div>
-              <h3 className="text-white">Uncategorized</h3>
-              <p>Standard assessment without a specific subject category.</p>
-            </div>
-
-            {/* 3. Permanent "Create New" Card */}
-            <div
-              className="skill-card"
-              onClick={() => setShowAddForm(true)}
-              style={{ border: "2px dashed #cbd5e1" }}
-            >
-              <div
-                className="skill-icon"
-                style={{ background: "transparent", color: "#cbd5e1" }}
-              >
-                <i className="fas fa-plus"></i>
-              </div>
-              <h3 style={{ color: "#64748b" }}>Add New Skill</h3>
-              <p>Create a brand new subject category for the platform.</p>
-            </div>
-          </div>
-        )}
-      </main>
+      )}
     </div>
   );
 };
