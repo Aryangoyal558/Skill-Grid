@@ -210,25 +210,6 @@ const SelectSkill = () => {
             </div>
           ))}
 
-          {/* Uncategorized Card */}
-          <div
-            className="dashboard-card text-center d-flex flex-column align-items-center justify-content-center p-4"
-            style={{ cursor: "pointer", transition: "transform 0.2s ease" }}
-            onClick={() =>
-              handleSelectSkill({ _id: null, name: "Uncategorized" })
-            }
-          >
-            <div className="mb-3">
-              <i className="fa-solid fa-folder-open text-warning fa-2x"></i>
-            </div>
-            <h4 className="text-white fw-bold mb-1" style={{ fontSize: "16px" }}>
-              Uncategorized
-            </h4>
-            <p className="card-subtext text-center m-0">
-              Standard assessment without a specific subject category.
-            </p>
-          </div>
-
           {/* Create New Card */}
           <div
             className="dashboard-card text-center d-flex flex-column align-items-center justify-content-center p-4"
