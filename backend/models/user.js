@@ -46,6 +46,15 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:true
     },
+    // --- AC-02: LOGIN SECURITY FIELDS ---
+    loginAttempts: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    lockUntil: {
+        type: Date
+    }
 
 },{timestamps:true});
 
