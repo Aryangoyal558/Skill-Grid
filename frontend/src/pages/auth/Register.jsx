@@ -119,72 +119,8 @@ const Register = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <div className="role-cards ">
-              <div className="col-md-4" style={{ width: "100%" }}>
-                <div
-                  className={`role-card ${role === "candidate" ? "selected" : ""}`}
-                  onClick={() => handleRoleChange("candidate")}
-                >
-                  <img
-                    src={stud}
-                    alt="Candidate"
-                    className="role-icon"
-                    style={{ display: "block", margin: "0 auto 15px" }}
-                  />
-                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
-                    CANDIDATE
-                  </h6>
-                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
-                    Access assessments & certificates
-                  </p>
-                </div>
-              </div>
-
-              {/* Examiner */}
-              <div className="col-md-4" style={{ width: "100%" }}>
-                <div
-                  className={`role-card ${role === "examiner" ? "selected" : ""}`}
-                  onClick={() => handleRoleChange("examiner")}
-                >
-                  <img
-                    src={examine}
-                    className="role-icon"
-                    style={{ display: "block", margin: "0 auto 15px" }}
-                  />
-                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
-                    EXAMINER
-                  </h6>
-                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
-                    Create & evaluate assessments
-                  </p>
-                </div>
-              </div>
-
-              {/* Admin */}
-              <div className="col-md-4" style={{ width: "100%" }}>
-                <div
-                  className={`role-card ${role === "admin" ? "selected" : ""}`}
-                  onClick={() => handleRoleChange("admin")}
-                >
-                  <img
-                    src={admi}
-                    alt="Admin"
-                    className="role-icon"
-                    style={{ display: "block", margin: "0 auto 15px" }}
-                  />
-                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
-                    ADMIN
-                  </h6>
-                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
-                    Manage users & system
-                  </p>
-                </div>
-              </div>
-            </div>
             <div className="form-box">
-              <div className="form-title">
-                Sign Up as <span>{getRoleDisplayName()}</span>
-              </div>
+              <div className="form-title">Sign Up</div>
 
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-2">

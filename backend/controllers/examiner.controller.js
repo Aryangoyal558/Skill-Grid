@@ -1,4 +1,7 @@
 const Assessment = require("../models/assessment");
+const User= require("../models/user");
+const Question= require("../models/question");
+const Certificate= require("../models/certificate");
 
 const createAssessment = async (req, res) => {
 
@@ -300,6 +303,29 @@ const getMyAssessments = async (req, res) => {
     }
 };
 
+const getMyInfo=async(req,res)=>{
+    try{
+        const students= await User.countDocuments({role:"candidate"});
+        const assessments= await Assessment.countDocuments();
+        const questions= await Question.countDocuments();
+        const certificates=await Certificate.countDocuments();
+        const stats={
+            students,
+            assessments,
+            questions,
+            certificates
+        };
+        res.status(200).json({
+            success:true,
+            message:"Examiner Dashboard",
+            user:req.user,
+            stats
+        });
+    }catch(err){
+
+    }
+};
+
 module.exports = {
 
     createAssessment,
@@ -310,6 +336,7 @@ module.exports = {
     deleteAssessment,
 
     publishAssessment,
-    getMyAssessments
+    getMyAssessments,
+    getMyInfo
 
 };

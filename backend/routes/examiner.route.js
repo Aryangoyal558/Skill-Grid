@@ -49,4 +49,11 @@ router.get(
     examinerController.getMyAssessments
 );
 
+router.get(
+    "/dashboard",
+    authenticateUser,
+    authorizeRoles("examiner"),
+    examinerController.getMyInfo
+);
+
 module.exports = router;
