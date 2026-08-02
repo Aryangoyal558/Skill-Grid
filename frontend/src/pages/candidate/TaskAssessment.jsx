@@ -8,14 +8,27 @@ const TakeAssessment = () => {
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState(() => {
+    const savedAnswers = sessionStorage.getItem("examAnswers");
+    return savedAnswers ? JSON.parse(savedAnswers) : {};
+  });
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    return Number(sessionStorage.getItem("currentQuestion") || 0);
+  });
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 30 Minutes Timer
   const [timeLeft, setTimeLeft] = useState(0);
   const submittedRef = useRef(false);
+
+  useEffect(() => {
+    sessionStorage.setItem("currentQuestion", currentQuestion);
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    sessionStorage.setItem("examAnswers", JSON.stringify(answers));
+  }, [answers]);
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -192,6 +205,8 @@ const TakeAssessment = () => {
       sessionStorage.removeItem("examInProgress");
       sessionStorage.removeItem("currentAssessmentId");
       sessionStorage.removeItem("examEndTime");
+      sessionStorage.removeItem("examAnswers");
+      sessionStorage.removeItem("currentQuestion");
 
       navigate(redirect, { replace: true });
     } catch (err) {
