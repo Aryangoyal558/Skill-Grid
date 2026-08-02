@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./css/Dashboard.css"; // Using your teammate's CSS file
-
-// If you have the logo in your assets folder, import it here:
-// import logo from "../../assets/logo.png";
+import { AuthContext } from "../../context/AuthContext";
+import "./css/Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const [data, setData] = useState({ user: {}, stats: {} });
   const [loading, setLoading] = useState(true);
@@ -21,159 +20,277 @@ const Dashboard = () => {
       const res = await axios.get("http://localhost:8081/examiner/dashboard", {
         withCredentials: true,
       });
-      
+
       setData({
-        user: res.data.user || { name: "Examiner", email: "Loading...", role: "examiner" },
-        stats: res.data.stats || { students: 0, assessments: 0, questions: 0, certificates: 0 }
+        user: res.data.user || {
+          name: "Examiner",
+          email: "Loading...",
+          role: "examiner",
+        },
+        stats: res.data.stats || {
+          students: 0,
+          assessments: 0,
+          questions: 0,
+          certificates: 0,
+        },
       });
     } catch (err) {
-      // 1. Log the exact error from your friend's backend
-      console.error("BACKEND REJECTION REASON:", err.response ? err.response.data : err.message);
-      
-      // 2. Temporarily turn off the redirect so you stay on the page!
-      // navigate("/login"); 
+      console.error(
+        "BACKEND REJECTION REASON:",
+        err.response ? err.response.data : err.message
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
       await axios.post(
         "http://localhost:8081/auth/logout",
         {},
-        {
-          withCredentials: true,
-        },
+        { withCredentials: true }
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      localStorage.clear();
+      sessionStorage.clear();
+      if (setUser) setUser(null);
+      window.location.replace("/login");
     }
-    navigate("/login");
   };
 
   if (loading) {
-    return <h2 style={{ textAlign: "center", marginTop: "50px" }}>Loading...</h2>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center w-100"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="spinner-border text-info" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="dashboard-layout">
-      {/* Sidebar - Built using your teammate's CSS classes */}
-      <nav className="sidebar">
-        {/* <img src={logo} className="sidebar-logo" alt="Logo" /> */}
-        <div className="sidebar-logo" style={{ fontSize: '24px', fontWeight: 'bold', color: '#2563eb' }}>URV</div>
-        
-        <button className="nav-item active" onClick={() => navigate("/examiner/dashboard")} title="Dashboard">
-          <i className="fas fa-home"></i>
-        </button>
-        
-        <button className="nav-item" onClick={() => navigate("/examiner/create-assessment")} title="Create Assessment">
-          <i className="fas fa-plus-circle"></i>
-        </button>
-        
-        <button className="nav-item" onClick={() => navigate("/examiner/assessments")} title="My Assessments">
-          <i className="fas fa-list-ul"></i>
-        </button>
-        
-        <div className="spacer"></div>
-        
-        <button className="nav-item logout-btn" onClick={logout} title="Logout">
-          <i className="fas fa-sign-out-alt"></i>
-        </button>
-      </nav>
+    <div className="dashboard-page-container">
+      {/* Header Card / Banner */}
+      <div
+        style={{
+          background: "linear-gradient(135deg, #4f46e5, #9333ea)",
+          color: "#fff",
+          padding: "24px 28px",
+          borderRadius: "16px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+          marginBottom: "24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "16px",
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "800",
+              marginBottom: "6px",
+              color: "#ffffff",
+            }}
+          >
+            Welcome back,{" "}
+            <span style={{ color: "#fde68a", fontWeight: "800" }}>
+              {data.user.name}
+            </span>{" "}
+            👋
+          </h1>
+          <p
+            style={{
+              fontSize: "13px",
+              color: "rgba(255, 255, 255, 0.85)",
+              marginBottom: "6px",
+            }}
+          >
+            {data.user.email}
+          </p>
+          <p
+            style={{
+              display: "inline-block",
+              padding: "4px 12px",
+              background: "rgba(255, 255, 255, 0.2)",
+              borderRadius: "20px",
+              fontSize: "12px",
+              fontWeight: "600",
+              backdropFilter: "blur(8px)",
+              margin: 0,
+            }}
+          >
+            Role: <span className="capitalize">{data.user.role}</span>
+          </p>
+        </div>
 
-      {/* Main Content Area */}
-      <main className="dashboard-main">
-        <header className="dashboard-header">
-          <h1>Welcome, {data.user.name}</h1>
-          <p>{data.user.email}</p>
-          <p>Role : {data.user.role}</p>
-        </header>
+        <button
+          onClick={handleLogout}
+          style={{
+            background: "#ffffff",
+            color: "#4f46e5",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "25px",
+            fontWeight: "700",
+            fontSize: "13px",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = "#fde68a";
+            e.target.style.color = "#000";
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = "#ffffff";
+            e.target.style.color = "#4f46e5";
+          }}
+        >
+          Logout
+        </button>
+      </div>
 
-        {/* Top 4 Stats using Teammate's Grid & Colors */}
-        <div className="container">
-          <div className="row">
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#e0f2fe" }}>
-                <h3>Total Students</h3>
-                <h2>{data.stats.students}</h2>
-                <i className="fas fa-users stat-icon" style={{ color: "#0284c7" }}></i>
-              </div>
+      <div className="dashboard-body">
+        {/* Top 4 Stats using Design System KPI Cards */}
+        <div className="kpi-cards-grid">
+          <div className="kpi-card card-cyan">
+            <div className="kpi-info">
+              <span className="kpi-value">{data.stats.students}</span>
+              <span className="kpi-label">TOTAL STUDENTS</span>
             </div>
-
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#dcfce7" }}>
-                <h3>Assessments</h3>
-                <h2>{data.stats.assessments}</h2>
-                <i className="fas fa-file-alt stat-icon" style={{ color: "#166534" }}></i>
-              </div>
+            <div className="kpi-icon-wrap">
+              <i className="fa-solid fa-users"></i>
             </div>
+          </div>
 
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#fef9c3" }}>
-                <h3>Questions</h3>
-                <h2>{data.stats.questions}</h2>
-                <i className="fas fa-question-circle stat-icon" style={{ color: "#a16207" }}></i>
-              </div>
+          <div className="kpi-card card-purple">
+            <div className="kpi-info">
+              <span className="kpi-value">{data.stats.assessments}</span>
+              <span className="kpi-label">ASSESSMENTS</span>
             </div>
+            <div className="kpi-icon-wrap">
+              <i className="fa-solid fa-file-lines"></i>
+            </div>
+          </div>
 
-            <div className="col-md-3 pb-2">
-              <div className="stat-card" style={{ backgroundColor: "#ffedd5" }}>
-                <h3>Certificates</h3>
-                <h2>{data.stats.certificates}</h2>
-                <i className="fas fa-certificate stat-icon" style={{ color: "#c2410c" }}></i>
-              </div>
+          <div className="kpi-card card-yellow">
+            <div className="kpi-info">
+              <span className="kpi-value">{data.stats.questions}</span>
+              <span className="kpi-label">QUESTIONS</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fa-solid fa-circle-question"></i>
+            </div>
+          </div>
+
+          <div className="kpi-card card-pink">
+            <div className="kpi-info">
+              <span className="kpi-value">{data.stats.certificates}</span>
+              <span className="kpi-label">CERTIFICATES</span>
+            </div>
+            <div className="kpi-icon-wrap">
+              <i className="fa-solid fa-certificate"></i>
             </div>
           </div>
         </div>
 
-        {/* Dashboard Action Cards */}
-        <div className="container mt-3">
-          <div className="row">
-            {/* Quick Actions */}
-            <div className="col-md-6 pb-2">
-              <div className="dashboard-card">
-                <div className="card-header">
-                  <h2>Examiner Actions</h2>
-                </div>
-                <p>Create new tests and review student submissions.</p>
+        {/* Content Grid: Actions & Profile */}
+        <div className="content-grid-row two-cols">
+          {/* Quick Actions */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <h3>
+                <i className="fa-solid fa-bolt card-title-icon"></i>
+                Examiner Actions
+              </h3>
+            </div>
+            <p className="card-subtext mb-3">
+              Create new tests and review student submissions.
+            </p>
 
-                <div className="list-item" style={{ cursor: 'pointer' }} onClick={() => navigate("/examiner/create-assessment")}>
-                  <div className="list-item-left">
-                    <i className="fas fa-plus-circle" style={{ color: '#2563eb' }}></i>
-                    <div>
-                      <strong>Create Assessment</strong>
-                      <p>Draft a new skill test or challenge.</p>
-                    </div>
+            <div className="items-list">
+              <div
+                className="list-item-card"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/examiner/create-assessment")}
+              >
+                <div className="list-item-info">
+                  <i className="fa-solid fa-circle-plus item-icon"></i>
+                  <div>
+                    <strong className="item-title">Create Assessment</strong>
+                    <span className="item-subtext">
+                      Draft a new skill test or challenge.
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                <div className="list-item" style={{ cursor: 'pointer' }} onClick={() => navigate("/examiner/assessments")}>
-                  <div className="list-item-left">
-                    <i className="fas fa-tasks" style={{ color: '#166534' }}></i>
-                    <div>
-                      <strong>Manage Assessments</strong>
-                      <p>View, edit, and grade active tests.</p>
-                    </div>
+              <div
+                className="list-item-card"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/examiner/assessments")}
+              >
+                <div className="list-item-info">
+                  <i className="fa-solid fa-list-check item-icon"></i>
+                  <div>
+                    <strong className="item-title">Manage Assessments</strong>
+                    <span className="item-subtext">
+                      View, edit, and grade active tests.
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Profile Info */}
-            <div className="col-md-6 pb-2">
-              <div className="dashboard-card">
-                <h2>Profile Information</h2>
-                <p><b>Name :</b> {data.user.name}</p>
-                <p><b>Email :</b> {data.user.email}</p>
-                <p><b>Role :</b> {data.user.role}</p>
-                <p><b>Department :</b> Examination Board</p>
-                <p><b>Status :</b> Active</p>
+          {/* Profile Info */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <h3>
+                <i className="fa-solid fa-id-card card-title-icon"></i>
+                Profile Information
+              </h3>
+            </div>
+
+            <div className="profile-details-list">
+              <div className="profile-detail-item">
+                <span className="detail-label">Name</span>
+                <span className="detail-value">{data.user.name}</span>
+              </div>
+
+              <div className="profile-detail-item">
+                <span className="detail-label">Email</span>
+                <span className="detail-value">{data.user.email}</span>
+              </div>
+
+              <div className="profile-detail-item">
+                <span className="detail-label">Role</span>
+                <span className="detail-value capitalize">{data.user.role}</span>
+              </div>
+
+              <div className="profile-detail-item">
+                <span className="detail-label">Department</span>
+                <span className="detail-value">Examination Board</span>
+              </div>
+
+              <div className="profile-detail-item">
+                <span className="detail-label">Status</span>
+                <span className="detail-value status-verified">
+                  <i className="fa-solid fa-circle-check me-1"></i> Active
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

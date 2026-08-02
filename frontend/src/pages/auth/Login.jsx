@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Login.css";
 
-// Your friend's local image imports
-import logo from "../../assets/logo.png";
 import stud from "../../assets/stud.png";
 import examine from "../../assets/examine.png";
 import admi from "../../assets/admi.png";
@@ -39,7 +37,6 @@ const Login = () => {
     }));
   };
 
-  // Your friend's exact backend submission logic
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,11 +45,10 @@ const Login = () => {
         import.meta.env.VITE_SERVER_LOGIN_URL,
         formData,
         {
-          withCredentials: true, // This tells the browser to accept secure cookies from the backend
+          withCredentials: true,
         },
       );
 
-      // Keep the alerts for now as your friend set them up
       alert(response.data.message);
       await checkLogin();
       navigate(`/${response.data.user.role}/dashboard`);
@@ -72,7 +68,6 @@ const Login = () => {
     }
   };
 
-  // Helper to capitalize the role for the UI
   const getRoleDisplayName = () => {
     if (role === "candidate") return "Candidate";
     if (role === "examiner") return "Examiner";
@@ -80,39 +75,35 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="app-container">
-        {/* Restored Beautiful Header */}
-        <header className="platform-header">
-          <div className="logo-container">
-            <img
-              src={logo}
-              alt="Ujwal Radiant Vision"
-              className="platform-logo"
-            />
-            <div className="logo-text">
-              <span className="company-name">UJWAL RADIANT VISION</span>
-              <span className="platform-title">
-                Online Skill Assessment and Digital Certification Platform
-              </span>
-            </div>
-          </div>
-        </header>
-
-        <div className="main-container">
-          <div className="content-box">
+    <div className="">
+      <div
+        className="container text-center d-flex justify-content-center align-items-center"
+        
+      >
+        <div className="row">
+          <div className="col-md-12">
             <h2>Welcome to Ujwal Radiant Vision</h2>
             <p className="subtitle">
               Choose your role to access your personalized dashboard.
             </p>
-
-            {/* Restored Role Cards with friend's imported images */}
+          </div>
+        </div>
+      </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
             <div className="role-cards">
               <div
                 className={`role-card card-candidate ${role === "candidate" ? "selected" : ""}`}
                 onClick={() => handleRole("candidate")}
+                style={{ textAlign: "center" }}
               >
-                <img src={stud} alt="Candidate" className="role-icon" />
+                <img
+                  src={stud}
+                  alt="Candidate"
+                  className="role-icon"
+                  style={{ display: "block", margin: "0 auto 15px" }}
+                />
                 <h3>CANDIDATE (Student)</h3>
                 <p>
                   Access assessments, track progress, and view certificates.
@@ -122,8 +113,14 @@ const Login = () => {
               <div
                 className={`role-card card-examiner ${role === "examiner" ? "selected" : ""}`}
                 onClick={() => handleRole("examiner")}
+                style={{ textAlign: "center" }}
               >
-                <img src={examine} alt="Examiner" className="role-icon" />
+                <img
+                  src={examine}
+                  alt="Examiner"
+                  className="role-icon"
+                  style={{ display: "block", margin: "0 auto 15px" }}
+                />
                 <h3>EXAMINER</h3>
                 <p>Create and manage assessments, grade submissions.</p>
               </div>
@@ -131,14 +128,19 @@ const Login = () => {
               <div
                 className={`role-card card-admin ${role === "admin" ? "selected" : ""}`}
                 onClick={() => handleRole("admin")}
+                style={{ textAlign: "center" }}
               >
-                <img src={admi} alt="Administrator" className="role-icon" />
+                <img
+                  src={admi}
+                  alt="Administrator"
+                  className="role-icon"
+                  style={{ display: "block", margin: "0 auto 15px" }}
+                />
                 <h3>ADMINISTRATOR</h3>
                 <p>Manage platform settings, users, and overall operations.</p>
               </div>
             </div>
 
-            {/* Restored Form Structure */}
             <div className="form-box">
               <div className="form-title">
                 Login as <span>{getRoleDisplayName()}</span>
@@ -197,7 +199,11 @@ const Login = () => {
 
               <div
                 className="register-link"
-                style={{ marginTop: "20px", fontSize: "0.9em", color: "#666" }}
+                style={{
+                  marginTop: "20px",
+                  fontSize: "0.9em",
+                  color: "#666",
+                }}
               >
                 Don't have an account?{" "}
                 <Link

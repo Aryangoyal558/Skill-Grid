@@ -5,257 +5,194 @@ import "./css/Dashboard.css";
 
 const Profile = () => {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     getProfile();
   }, []);
 
-
   const getProfile = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:8081/candidate/dashboard",
-        {
-          withCredentials: true,
-        }
-      );
-
+      const res = await axios.get("http://localhost:8081/candidate/dashboard", {
+        withCredentials: true,
+      });
       setUser(res.data.user);
-
     } catch (err) {
       console.log(err);
       navigate("/login");
-
     } finally {
       setLoading(false);
     }
   };
 
+  const capitalize = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   if (loading) {
     return (
-      <h2 style={{ textAlign: "center" }}>
-        Loading Profile...
-      </h2>
+      <div className="d-flex justify-content-center align-items-center vh-100 text-light">
+        <div className="spinner-border text-cyan" role="status"></div>
+        <span className="ms-3 fw-semibold">Loading Profile...</span>
+      </div>
     );
   }
 
-
   return (
-    <div className="container">
+    <div className="profile-dashboard-wrapper p-4">
+      {/* Header Banner */}
+      <header className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+        <div>
+          <h1 className="fw-bold fs-2 m-0 text-white d-flex align-items-center gap-2">
+            <span>
+              {(() => {
+                const hour = new Date().getHours();
+                if (hour < 12) return "Good morning";
+                if (hour < 18) return "Good afternoon";
+                return "Good evening";
+              })()}
+              , <span className="theme-gradient-text">{user?.name ? capitalize(user.name.split(" ")[0]) : "Candidate"}</span>!
+            </span>
+            <span className="wave-emoji">👋</span>
+          </h1>
+          <p className="subtext-gray m-0 mt-1 fs-6">
+            Welcome back to your workspace. Here’s a detailed overview of your candidate account.
+          </p>
+        </div>
 
-      <header className="dashboard-header">
-        <h1>
-          My Profile
-        </h1>
-
-        <p>
-          Manage your account information
-        </p>
+        {/* Live Session Pill */}
+        <div className="neon-status-pill">
+          <span className="pulse-dot-green"></span>
+          <span>Active Session</span>
+        </div>
       </header>
 
-
-
-      <div className="row">
-
+      {/* Main Content Layout */}
+      <div className="row g-4">
         {/* Profile Card */}
+        <div className="col-lg-4">
+          <div className="cyber-card profile-card text-center p-4 h-100 d-flex flex-column align-items-center justify-content-center">
+            <div className="avatar-glow-ring mb-3">
+              <i className="fas fa-user-circle avatar-icon"></i>
+            </div>
 
-        <div className="col-md-4 pb-3">
-
-          <div className="dashboard-card text-center">
-
-            <i 
-              className="fas fa-user-circle"
-              style={{
-                fontSize:"90px",
-                color:"#2563eb"
-              }}
-            ></i>
-
-
-            <h2 className="mt-3">
-              {user.name}
+            <h2 className="fw-bold fs-3 text-white mb-1 text-capitalize">
+              {user?.name || "Candidate Name"}
             </h2>
+            <p className="role-tag mb-3">{user?.role || "Candidate"}</p>
 
-
-            <p>
-              {user.role}
-            </p>
-
-
-            <span
-              className="badge bg-success"
-            >
-              {user.isVerified 
-                ? "Verified Account"
-                : "Pending Verification"
-              }
-            </span>
-
-
+            <div className={`status-pill-badge ${user?.isVerified ? "verified" : "pending"}`}>
+              <i className={`fas ${user?.isVerified ? "fa-check-circle" : "fa-exclamation-circle"} me-2`}></i>
+              {user?.isVerified ? "Verified Account" : "Pending Verification"}
+            </div>
           </div>
-
         </div>
 
+        {/* Details Card */}
+        <div className="col-lg-8">
+          <div className="cyber-card p-4 h-100">
+            <div className="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+              <h3 className="fs-5 fw-bold m-0 theme-gradient-text">Personal Details</h3>
+              <span className="info-chip">
+                <i className="fas fa-shield-alt me-1"></i> Secure Profile
+              </span>
+            </div>
 
+            <div className="details-list">
+              <div className="detail-item">
+                <div className="detail-label">
+                  <i className="fas fa-user icon-cyan"></i>
+                  <span>Full Name</span>
+                </div>
+                <div className="detail-value text-capitalize">{user?.name || "—"}</div>
+              </div>
 
-        {/* Details */}
+              <div className="detail-item">
+                <div className="detail-label">
+                  <i className="fas fa-envelope icon-magenta"></i>
+                  <span>Email Address</span>
+                </div>
+                <div className="detail-value">{user?.email || "—"}</div>
+              </div>
 
-        <div className="col-md-8 pb-3">
+              <div className="detail-item">
+                <div className="detail-label">
+                  <i className="fas fa-phone icon-purple"></i>
+                  <span>Phone Number</span>
+                </div>
+                <div className="detail-value">{user?.phone_no || "Not Added"}</div>
+              </div>
 
-          <div className="dashboard-card">
+              <div className="detail-item">
+                <div className="detail-label">
+                  <i className="fas fa-id-badge icon-amber"></i>
+                  <span>Account Role</span>
+                </div>
+                <div className="detail-value text-capitalize">{user?.role || "—"}</div>
+              </div>
 
-
-            <h2>
-              Personal Information
-            </h2>
-
-
-            <hr/>
-
-
-            <p>
-              <b>Name :</b> {user.name}
-            </p>
-
-
-            <p>
-              <b>Email :</b> {user.email}
-            </p>
-
-
-            <p>
-              <b>Phone :</b> 
-              {" "}
-              {user.phone_no || "Not Added"}
-            </p>
-
-
-            <p>
-              <b>Role :</b> {user.role}
-            </p>
-
-
-            <p>
-              <b>Email Status :</b>
-              {" "}
-              {user.isVerified
-                ? "Verified"
-                : "Not Verified"
-              }
-            </p>
-
-
+              <div className="detail-item border-0">
+                <div className="detail-label">
+                  <i className="fas fa-check-double icon-green"></i>
+                  <span>Email Status</span>
+                </div>
+                <div className="detail-value">
+                  <span className={`status-text-pill ${user?.isVerified ? "is-verified" : "is-pending"}`}>
+                    {user?.isVerified ? "Verified" : "Unverified"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-
-
         </div>
-
-
       </div>
 
-
-
-
-      {/* Account Summary */}
-
-      <div className="row mt-3">
-
-
-        <div className="col-md-4 pb-3">
-
-          <div 
-            className="stat-card"
-            style={{
-              background:"#e0f2fe"
-            }}
-          >
-
-            <h3>
-              Account
-            </h3>
-
-            <h2>
-              Active
-            </h2>
-
-            <i className="fas fa-user-check stat-icon"></i>
-
+      {/* Widgets Grid */}
+      <div className="row g-4 mt-1">
+        <div className="col-md-4">
+          <div className="cyber-widget widget-cyan">
+            <div className="widget-icon">
+              <i className="fas fa-user-check"></i>
+            </div>
+            <div>
+              <p className="widget-title">Account</p>
+              <h4 className="widget-value">Active</h4>
+            </div>
           </div>
-
         </div>
 
-
-
-        <div className="col-md-4 pb-3">
-
-
-          <div 
-            className="stat-card"
-            style={{
-              background:"#dcfce7"
-            }}
-          >
-
-            <h3>
-              Email
-            </h3>
-
-            <h2>
-              Verified
-            </h2>
-
-            <i className="fas fa-envelope stat-icon"></i>
-
+        <div className="col-md-4">
+          <div className="cyber-widget widget-green">
+            <div className="widget-icon">
+              <i className="fas fa-envelope"></i>
+            </div>
+            <div>
+              <p className="widget-title">Email Status</p>
+              <h4 className="widget-value">
+                {user?.isVerified ? "Verified" : "Unverified"}
+              </h4>
+            </div>
           </div>
-
-
         </div>
 
-
-
-
-        <div className="col-md-4 pb-3">
-
-
-          <div 
-            className="stat-card"
-            style={{
-              background:"#fef9c3"
-            }}
-          >
-
-            <h3>
-              Phone
-            </h3>
-
-            <h2>
-              {
-                user.phone_no
-                ? "Added"
-                : "Pending"
-              }
-            </h2>
-
-            <i className="fas fa-phone stat-icon"></i>
-
-
+        <div className="col-md-4">
+          <div className="cyber-widget widget-orange">
+            <div className="widget-icon">
+              <i className="fas fa-phone-alt"></i>
+            </div>
+            <div>
+              <p className="widget-title">Phone</p>
+              <h4 className="widget-value">
+                {user?.phone_no ? "Connected" : "Pending"}
+              </h4>
+            </div>
           </div>
-
-
         </div>
-
-
       </div>
-
-
     </div>
   );
 };
-
 
 export default Profile;

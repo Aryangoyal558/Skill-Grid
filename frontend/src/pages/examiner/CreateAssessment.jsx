@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom"; // IMPORTED useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../service/api";
-import "./css/Dashboard.css";
 import "./css/CreateAssessment.css";
 
 const CreateAssessment = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Hook to grab the passed state
+  const location = useLocation();
 
-  // Grab the skill data passed from the SelectSkill page
-  // Fallback to "General" if they somehow access the page directly
+  // Grab skill data passed from SelectSkill; fallback to General
   const selectedSkill = location.state || { skillId: null, skillName: "General" };
 
-  // Updated state to include skillId for the backend
+  // Form state
   const [form, setForm] = useState({
     title: "",
     description: "",
     duration: "",
     totalMarks: "",
     passingMarks: "",
-    skillId: selectedSkill.skillId, // ADDED SKILL ID
+    skillId: selectedSkill.skillId,
   });
+
+  const [loading, setLoading] = useState(false);
 
   const change = (e) => {
     setForm({
@@ -31,133 +31,225 @@ const CreateAssessment = () => {
 
   const submit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      // Sends the form data (now including skillId) to the backend
       const res = await api.post("/examiner/assessment", form);
       alert("Assessment Created Successfully!");
-      navigate("/examiner/assessments");
+      
+      const createdId = res.data?.assessment?._id || res.data?._id;
+      if (createdId) {
+        // FIX: Pass the skillId in the background state!
+        navigate(`/examiner/manage-questions/${createdId}`, {
+          state: { skillId: form.skillId }
+        });
+      } else {
+        navigate("/examiner/assessments");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Failed to create assessment");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="dashboard-layout">
-      {/* 1. Sidebar */}
-      <nav className="sidebar">
-        <div className="sidebar-logo" style={{ fontSize: "24px", fontWeight: "bold", color: "#2563eb" }}>
-          URV
+    <div 
+      className="dashboard-page-container" 
+      style={{ 
+        paddingBottom: "40px", 
+        height: "calc(100vh - 70px)", 
+        overflowY: "auto",
+        paddingRight: "10px" 
+      }}
+    >
+      {/* Header Action Bar */}
+      <div className="dashboard-header-title d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+          <h1 className="m-0 text-white fw-bold">
+            Create {selectedSkill.skillName} Assessment
+          </h1>
+          <p className="card-subtext mt-1 m-0 text-muted" style={{ fontSize: "13px" }}>
+            Define the parameters and rules for your new skill test.
+          </p>
         </div>
 
-        <button className="nav-item" onClick={() => navigate("/examiner/dashboard")} title="Dashboard">
-          <i className="fas fa-home"></i>
+        <button
+          type="button"
+          className="btn btn-sm btn-outline-light d-flex align-items-center gap-2"
+          onClick={() => navigate("/examiner/create-assessment")}
+          style={{
+            borderRadius: "10px",
+            padding: "8px 16px",
+            fontWeight: "600",
+            fontSize: "13px",
+          }}
+        >
+          <i className="fa-solid fa-arrow-left"></i> Back to Skills
         </button>
+      </div>
 
-        <button className="nav-item active" onClick={() => navigate("/examiner/create-assessment")} title="Create Assessment">
-          <i className="fas fa-plus-circle"></i>
-        </button>
-
-        <button className="nav-item" onClick={() => navigate("/examiner/assessments")} title="My Assessments">
-          <i className="fas fa-list-ul"></i>
-        </button>
-
-        <div className="spacer"></div>
-      </nav>
-
-      {/* 2. Main Content Area */}
-      <main className="dashboard-main">
-        <div className="header-actions">
-          <div className="dashboard-header" style={{ marginBottom: 0 }}>
-            {/* DYNAMIC TITLE: Shows the selected skill! */}
-            <h1>Create {selectedSkill.skillName} Assessment</h1>
-            <p>Define the parameters and rules for your new skill test.</p>
+      {/* Form Card Container */}
+      <div className="dashboard-card p-4" style={{ marginBottom: "20px" }}>
+        <form onSubmit={submit} className="d-flex flex-column gap-3">
+          {/* Assessment Title */}
+          <div className="form-group">
+            <label
+              htmlFor="title"
+              className="detail-label mb-2 d-block text-white font-weight-bold"
+              style={{ fontSize: "13px" }}
+            >
+              Assessment Title
+            </label>
+            <input
+              id="title"
+              className="form-control bg-dark text-white border-secondary"
+              style={{
+                borderRadius: "10px",
+                padding: "12px 16px",
+                fontSize: "14px",
+              }}
+              name="title"
+              placeholder="e.g. Advanced JavaScript Fundamentals"
+              value={form.title}
+              onChange={change}
+              required
+            />
           </div>
-          <button
-            className="logout-btn"
-            onClick={() => navigate("/examiner/create-assessment")} // Changed to go back to skill selection
-            style={{ padding: "10px 20px", borderRadius: "8px", cursor: "pointer", background: "white" }}
+
+          {/* Description & Instructions */}
+          <div className="form-group">
+            <label
+              htmlFor="description"
+              className="detail-label mb-2 d-block text-white font-weight-bold"
+              style={{ fontSize: "13px" }}
+            >
+              Description & Instructions
+            </label>
+            <textarea
+              id="description"
+              className="form-control bg-dark text-white border-secondary"
+              style={{
+                borderRadius: "10px",
+                padding: "12px 16px",
+                fontSize: "14px",
+                minHeight: "90px",
+              }}
+              name="description"
+              placeholder="Briefly describe what this assessment covers and any specific instructions for the candidates."
+              value={form.description}
+              onChange={change}
+              required
+            />
+          </div>
+
+          {/* Numerical Parameters Grid Row */}
+          <div 
+            style={{ 
+              display: "grid", 
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", 
+              gap: "1rem" 
+            }}
           >
-            <i className="fas fa-arrow-left"></i> Back to Skills
-          </button>
-        </div>
-
-        {/* 3. The Form Card */}
-        <div className="form-card">
-          <form onSubmit={submit}>
             <div className="form-group">
-              <label>Assessment Title</label>
+              <label
+                htmlFor="duration"
+                className="detail-label mb-2 d-block text-white font-weight-bold"
+                style={{ fontSize: "13px" }}
+              >
+                Duration (Minutes)
+              </label>
               <input
-                className="form-control"
-                name="title"
-                placeholder="e.g. Advanced JavaScript Fundamentals"
-                value={form.title}
+                id="duration"
+                className="form-control bg-dark text-white border-secondary"
+                style={{
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+                type="number"
+                name="duration"
+                placeholder="e.g. 60"
+                value={form.duration}
                 onChange={change}
+                min="1"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label>Description & Instructions</label>
-              <textarea
-                className="form-control"
-                name="description"
-                placeholder="Briefly describe what this assessment covers and any specific instructions for the candidates."
-                value={form.description}
+              <label
+                htmlFor="totalMarks"
+                className="detail-label mb-2 d-block text-white font-weight-bold"
+                style={{ fontSize: "13px" }}
+              >
+                Total Marks
+              </label>
+              <input
+                id="totalMarks"
+                className="form-control bg-dark text-white border-secondary"
+                style={{
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+                type="number"
+                name="totalMarks"
+                placeholder="e.g. 100"
+                value={form.totalMarks}
                 onChange={change}
+                min="1"
                 required
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label>Duration (Minutes)</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  name="duration"
-                  placeholder="e.g. 60"
-                  value={form.duration}
-                  onChange={change}
-                  min="1"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Total Marks</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  name="totalMarks"
-                  placeholder="e.g. 100"
-                  value={form.totalMarks}
-                  onChange={change}
-                  min="1"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Passing Marks</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  name="passingMarks"
-                  placeholder="e.g. 40"
-                  value={form.passingMarks}
-                  onChange={change}
-                  min="1"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label
+                htmlFor="passingMarks"
+                className="detail-label mb-2 d-block text-white font-weight-bold"
+                style={{ fontSize: "13px" }}
+              >
+                Passing Marks
+              </label>
+              <input
+                id="passingMarks"
+                className="form-control bg-dark text-white border-secondary"
+                style={{
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  fontSize: "14px",
+                }}
+                type="number"
+                name="passingMarks"
+                placeholder="e.g. 40"
+                value={form.passingMarks}
+                onChange={change}
+                min="1"
+                required
+              />
             </div>
+          </div>
 
-            <button type="submit" className="submit-btn">
-              <i className="fas fa-save"></i> Save & Create Assessment
+          {/* Submit Action */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary border-0 d-inline-flex align-items-center gap-2"
+              style={{
+                padding: "12px 28px",
+                fontSize: "14px",
+                fontWeight: "600",
+                borderRadius: "10px",
+                backgroundColor: "#0ea5e9",
+                cursor: loading ? "not-allowed" : "pointer",
+              }}
+            >
+              <i className="fa-solid fa-floppy-disk"></i>{" "}
+              {loading ? "Saving..." : "Save & Create Assessment"}
             </button>
-          </form>
-        </div>
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

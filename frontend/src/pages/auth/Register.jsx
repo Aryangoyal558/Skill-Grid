@@ -1,13 +1,14 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import "./css/Register.css";
+import stud from "../../assets/stud.png";
+import examine from "../../assets/examine.png";
+import admi from "../../assets/admi.png";
+import about_1 from "../../assets/about_1.png";
 
 const Register = () => {
   const navigate = useNavigate();
-
   const [role, setRole] = useState("candidate");
 
   const [formData, setFormData] = useState({
@@ -20,9 +21,7 @@ const Register = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -34,7 +33,6 @@ const Register = () => {
 
   const handleRoleChange = (selectedRole) => {
     setRole(selectedRole);
-
     setFormData((prev) => ({
       ...prev,
       roles: selectedRole,
@@ -67,9 +65,7 @@ const Register = () => {
       const response = await axios.post(
         import.meta.env.VITE_SERVER_SIGNUP_URL,
         formData,
-        {
-          withCredentials: true,
-        },
+        { withCredentials: true },
       );
 
       alert(response.data.message);
@@ -86,9 +82,7 @@ const Register = () => {
       setRole("candidate");
 
       navigate("/verify-registration", {
-        state: {
-          email: formData.email,
-        },
+        state: { email: formData.email },
       });
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -111,155 +105,174 @@ const Register = () => {
   };
 
   return (
-    <div className="register-page">
-      <header className="platform-header">
-        <div className="logo-container">
-          <div className="logo-text">
-            <span className="company-name">UJWAL RADIANT VISION</span>
-
-            <span className="platform-title">
-              Online Skill Assessment and Digital Certification Platform
-            </span>
+    <div>
+      <div className="container text-center d-flex justify-content-center align-items-center">
+        <div className="row">
+          <div className="col-md-12">
+            <h2>Welcome to Ujwal Radiant Vision</h2>
+            <p className="subtitle">
+              Choose your role to access your personalized dashboard.
+            </p>
           </div>
         </div>
-      </header>
-
-      <div className="main-container">
-        <div className="content-box">
-          <h2>Welcome to Ujwal Radiant Vision</h2>
-
-          <p className="subtitle">
-            Choose your role to access your personalized dashboard.
-          </p>
-
-          <div className="role-cards">
-            {/* Candidate */}
-
-            <div
-              className={`role-card ${role === "candidate" ? "selected" : ""}`}
-              onClick={() => handleRoleChange("candidate")}
-            >
-              <h3>CANDIDATE (Student)</h3>
-
-              <p>Access assessments, track progress and certificates.</p>
-            </div>
-
-            {/* Examiner */}
-
-            <div
-              className={`role-card ${role === "examiner" ? "selected" : ""}`}
-              onClick={() => handleRoleChange("examiner")}
-            >
-              <h3>EXAMINER</h3>
-
-              <p>Create assessments and evaluate students.</p>
-            </div>
-
-            {/* Admin */}
-
-            <div
-              className={`role-card ${role === "admin" ? "selected" : ""}`}
-              onClick={() => handleRoleChange("admin")}
-            >
-              <h3>ADMINISTRATOR</h3>
-
-              <p>Manage users and platform settings.</p>
-            </div>
-          </div>
-
-          <div className="form-box">
-            <div className="form-title">
-              Sign Up as <span>{getRoleDisplayName()}</span>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="fullname"
-                  placeholder="Full Name"
-                  value={formData.fullname}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="phone"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="input-group">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
+      </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="role-cards ">
+              <div className="col-md-4" style={{ width: "100%" }}>
+                <div
+                  className={`role-card ${role === "candidate" ? "selected" : ""}`}
+                  onClick={() => handleRoleChange("candidate")}
                 >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
+                  <img
+                    src={stud}
+                    alt="Candidate"
+                    className="role-icon"
+                    style={{ display: "block", margin: "0 auto 15px" }}
+                  />
+                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
+                    CANDIDATE
+                  </h6>
+                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
+                    Access assessments & certificates
+                  </p>
+                </div>
               </div>
 
-              <div className="input-group">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                />
-
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              {/* Examiner */}
+              <div className="col-md-4" style={{ width: "100%" }}>
+                <div
+                  className={`role-card ${role === "examiner" ? "selected" : ""}`}
+                  onClick={() => handleRoleChange("examiner")}
                 >
-                  {showConfirmPassword ? "Hide" : "Show"}
-                </button>
+                  <img
+                    src={examine}
+                    className="role-icon"
+                    style={{ display: "block", margin: "0 auto 15px" }}
+                  />
+                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
+                    EXAMINER
+                  </h6>
+                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
+                    Create & evaluate assessments
+                  </p>
+                </div>
               </div>
 
-              <p className="terms-text">
-                By signing up you agree to our Terms & Conditions.
-              </p>
-
-              <button
-                type="submit"
-                className="action-btn signup-btn"
-                disabled={loading}
-              >
-                {loading ? "Creating Account..." : "SIGN UP"}
-              </button>
-
-              <div className="register-link">
-                Already have an account?
-                <Link to="/login"> Login here.</Link>
+              {/* Admin */}
+              <div className="col-md-4" style={{ width: "100%" }}>
+                <div
+                  className={`role-card ${role === "admin" ? "selected" : ""}`}
+                  onClick={() => handleRoleChange("admin")}
+                >
+                  <img
+                    src={admi}
+                    alt="Admin"
+                    className="role-icon"
+                    style={{ display: "block", margin: "0 auto 15px" }}
+                  />
+                  <h6 style={{ fontSize: "0.8rem", marginBottom: "2px" }}>
+                    ADMIN
+                  </h6>
+                  <p style={{ fontSize: "0.65rem", marginBottom: "0" }}>
+                    Manage users & system
+                  </p>
+                </div>
               </div>
-            </form>
+            </div>
+            <div className="form-box">
+              <div className="form-title">
+                Sign Up as <span>{getRoleDisplayName()}</span>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="input-group mb-2">
+                  <input
+                    type="text"
+                    name="fullname"
+                    placeholder="Full Name"
+                    value={formData.fullname}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group mb-2">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group mb-2">
+                  <input
+                    type="phone"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group mb-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+
+                <div className="input-group mb-2">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+
+                <div style={{ textAlign: "center", marginTop: "15px" }}>
+                  <p style={{ fontSize: "12px", marginBottom: "10px" }}>
+                    By signing up you agree to our Terms & Conditions.
+                  </p>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="signup-button"
+                  >
+                    {loading ? "Creating Account..." : "SIGN UP"}
+                  </button>
+
+                  <div style={{ marginTop: "10px" }}>
+                    Already have an account? <Link to="/login">Login</Link>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

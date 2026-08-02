@@ -39,58 +39,88 @@ const LiveAssessment = () => {
 
   if (loading) {
     return (
-      <h2 style={{ textAlign: "center", marginTop: "2rem" }}>
-        Loading Dashboard...
-      </h2>
+      <div className="d-flex justify-content-center align-items-center vh-100 text-light">
+        <div className="spinner-border text-cyan" role="status"></div>
+        <span className="ms-3 fw-semibold fs-5">Loading Dashboard...</span>
+      </div>
     );
   }
 
   return (
-    <div className="col-md-7 pb-2">
-      <div className="dashboard-card">
-        <h2 className="text-xl font-bold mb-2">Available Skill Assessments</h2>
-        <p className="text-gray-600 mb-4">
-          Select an assessment to start your evaluation.
-        </p>
+    <div className="profile-dashboard-wrapper p-4 text-white">
+      {/* Top Banner Header */}
+      <header className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+        <div>
+          <h1 className="fw-bold fs-2 m-0 text-white d-flex align-items-center gap-2">
+            <span>Available <span className="theme-gradient-text">Skill Assessments</span></span>
+            <i className="fas fa-laptop-code text-cyan fs-3 ms-2"></i>
+          </h1>
+          <p className="subtext-gray m-0 mt-1 fs-6">
+            Select an assessment to start your evaluation.
+          </p>
+        </div>
 
+        {/* Counter Pill */}
+        <div className="neon-status-pill">
+          <i className="fas fa-list-check text-cyan"></i>
+          <span>Available Tests: <b>{assessments.length}</b></span>
+        </div>
+      </header>
+
+      {/* Main Container Card */}
+      <div className="cyber-card p-4">
         {assessments.length === 0 ? (
-          <p className="text-slate-500 italic">
+          <p className="subtext-gray italic m-0">
             No published assessments available right now.
           </p>
         ) : (
-          <div className="space-y-3">
+          <div className="d-flex flex-column gap-3">
             {assessments.map((test) => (
               <div
                 key={test._id}
-                className="list-item flex justify-between items-center p-3 border rounded-lg"
+                className="assessment-row-card p-3 p-md-4 rounded-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3"
               >
-                <div className="list-item-left flex items-center gap-3">
-                  <i className="fas fa-code text-blue-600 text-xl"></i>
+                {/* Left Side Info */}
+                <div className="d-flex align-items-center gap-3">
+                  <div className="assessment-code-icon">
+                    <i className="fas fa-code"></i>
+                  </div>
                   <div>
-                    <strong className="block text-slate-800">
+                    <strong className="block text-white fs-5 text-capitalize">
                       {test.title}
                     </strong>
-                    <p className="text-xs text-slate-500">
-                      Duration: {test.timeLimit} mins | Passing Score:{" "}
-                      {test.minPassScore}%
-                    </p>
+                    <div className="d-flex flex-wrap align-items-center gap-3 fs-6 mt-1">
+                      <span className="subtext-gray d-flex align-items-center gap-1">
+                        <i className="far fa-clock text-cyan me-1"></i>
+                        Duration: <strong className="text-white ms-1">{test.timeLimit} mins</strong>
+                      </span>
+                      <span className="text-secondary">•</span>
+                      <span className="subtext-gray d-flex align-items-center gap-1">
+                        <i className="fas fa-bullseye text-magenta me-1"></i>
+                        Passing Score: <strong className="text-white ms-1">{test.minPassScore}%</strong>
+                      </span>
+                    </div>
                   </div>
                 </div>
-                {test.attempted ? (
-                  <button
-                    disabled
-                    className="bg-gray-400 text-white text-xs font-semibold px-3 py-2 rounded-md cursor-not-allowed"
-                  >
-                    Completed ✓
-                  </button>
-                ) : (
-                  <Link
-                    to={`/candidate/assessment/${test._id}`}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-md"
-                  >
-                    Start Test
-                  </Link>
-                )}
+
+                {/* Right Side Action Button */}
+                <div className="align-self-end align-self-sm-center">
+                  {test.attempted ? (
+                    <button
+                      disabled
+                      className="completed-pill-btn"
+                    >
+                      Completed ✓
+                    </button>
+                  ) : (
+                    <Link
+                      to={`/candidate/assessment/${test._id}`}
+                      className="cyber-btn primary-glow text-decoration-none px-4"
+                    >
+                      Start Test
+                    </Link>
+                  )}
+                </div>
               </div>
             ))}
           </div>

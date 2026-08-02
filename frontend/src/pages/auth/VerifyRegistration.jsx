@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-
 import "./css/Register.css";
 
 const VerifyRegistration = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Email passed from Register or Login page
   const email = location.state?.email || "";
 
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
 
-  // If user directly opens this page
   if (!email) {
     return (
       <div className="register-page">
@@ -51,7 +48,6 @@ const VerifyRegistration = () => {
     );
   }
 
-  // Verify OTP
   const handleVerify = async (e) => {
     e.preventDefault();
 
@@ -74,7 +70,6 @@ const VerifyRegistration = () => {
       );
 
       alert(res.data.message);
-
       navigate("/login");
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -83,7 +78,6 @@ const VerifyRegistration = () => {
     }
   };
 
-  // Resend OTP
   const resendOTP = async () => {
     try {
       setResending(true);
@@ -108,19 +102,6 @@ const VerifyRegistration = () => {
 
   return (
     <div className="register-page">
-      {/* Header */}
-      <header className="platform-header">
-        <div className="logo-container">
-          <div className="logo-text">
-            <span className="company-name">UJWAL RADIANT VISION</span>
-
-            <span className="platform-title">
-              Online Skill Assessment and Digital Certification Platform
-            </span>
-          </div>
-        </div>
-      </header>
-
       <div className="main-container">
         <div className="content-box">
           <h2>Email Verification</h2>
