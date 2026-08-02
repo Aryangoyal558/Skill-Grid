@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "./css/Dashboard.css";
@@ -11,9 +11,26 @@ const TakeAssessment = () => {
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 30 Minutes Timer
-  const [timeLeft, setTimeLeft] = useState(30 * 60);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const submittedRef = useRef(false);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (sessionStorage.getItem("examInProgress")) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem("examInProgress", "true");
@@ -68,17 +85,23 @@ const TakeAssessment = () => {
   useEffect(() => {
     if (loading) return;
 
-    if (timeLeft <= 0) {
-      submitExam(true);
-      return;
-    }
-
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      const endTime = Number(sessionStorage.getItem("examEndTime"));
+
+      const remaining = Math.floor((endTime - Date.now()) / 1000);
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        setTimeLeft(0);
+        submitExam(true);
+        return;
+      }
+
+      setTimeLeft(remaining);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, loading]);
+  }, [loading]);
 
   const loadQuestions = async () => {
     try {
@@ -90,6 +113,23 @@ const TakeAssessment = () => {
       );
 
       setQuestions(res.data.questions || []);
+
+      const duration = res.data.duration || 30;
+
+      const savedEndTime = sessionStorage.getItem("examEndTime");
+
+      if (!savedEndTime) {
+        const endTime = Date.now() + duration * 60 * 1000;
+
+        sessionStorage.setItem("examEndTime", endTime);
+        setTimeLeft(duration * 60);
+      } else {
+        const remaining = Math.floor(
+          (Number(savedEndTime) - Date.now()) / 1000,
+        );
+
+        setTimeLeft(Math.max(remaining, 0));
+      }
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     } finally {
@@ -118,9 +158,16 @@ const TakeAssessment = () => {
   };
 
   const submitExam = async (autoSubmit = false) => {
+    if (submittedRef.current) return;
+
+    submittedRef.current = true;
+
     if (!autoSubmit) {
       const ok = window.confirm("Are you sure you want to submit?");
-      if (!ok) return;
+      if (!ok) {
+        submittedRef.current = false;
+        return;
+      }
     }
 
     try {
@@ -128,7 +175,7 @@ const TakeAssessment = () => {
         "http://localhost:8081/result",
         {
           assessment: assessmentId,
-          answers: answers, // Sends object format: { "questionId": 0, "questionId2": 1 }
+          answers,
         },
         {
           withCredentials: true,
@@ -136,15 +183,19 @@ const TakeAssessment = () => {
       );
 
       alert(res.data.message || "Assessment Submitted!");
+
       const redirect =
         sessionStorage.getItem("redirectAfterSubmit") || "/candidate/dashboard";
 
+      // Cleanup
       sessionStorage.removeItem("redirectAfterSubmit");
       sessionStorage.removeItem("examInProgress");
       sessionStorage.removeItem("currentAssessmentId");
+      sessionStorage.removeItem("examEndTime");
 
-      navigate(redirect);
+      navigate(redirect, { replace: true });
     } catch (err) {
+      submittedRef.current = false;
       alert(err.response?.data?.message || err.message);
     }
   };

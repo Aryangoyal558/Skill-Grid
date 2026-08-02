@@ -1,5 +1,6 @@
 const Question = require("../models/question");
 const Result = require("../models/result");
+const Assessment = require("../models/assessment");
 
 const addQuestion = async (req, res) => {
     try {
@@ -64,14 +65,24 @@ const getQuestions = async (req, res) => {
             });
         }
 
-        const questions = await Question.find({
-            assessment: req.params.id
-        });
+        const assessment = await Assessment.findById(req.params.id);
 
-        return res.json({
-            success: true,
-            questions
-        });
+if (!assessment) {
+    return res.status(404).json({
+        success: false,
+        message: "Assessment not found",
+    });
+}
+
+const questions = await Question.find({
+    assessment: req.params.id,
+});
+
+return res.json({
+    success: true,
+    questions,
+    duration: assessment.duration,
+});
     }
     catch (err) {
         res.status(500).json({
