@@ -15,7 +15,7 @@ import {
 import "./LandingPage.css";
 import Typewriter from "typewriter-effect";
 import AboutSection from "../components/card/AboutSection";
-import TeamSection from "../components/card/TeamSection";
+
 
 import { useNavigate } from "react-router-dom";
 const LandingPage = () => {
@@ -54,7 +54,7 @@ const LandingPage = () => {
       {/* CTA */}
       <section
         className="cta-section"
-        style={{ background: "rgb(179, 44, 75)" }}
+         style={{ background: "#190d5e" }}
       >
         <h2>Ready To Showcase Your Skills?</h2>
         <p>Join thousands of learners building their professional careers.</p>
@@ -64,9 +64,6 @@ const LandingPage = () => {
         </Link>
       </section>
 
-      <section className="py-5" style={{ background: "rgb(25, 13, 94)" }}>
-        <TeamSection />
-      </section>
 
       {/* HERO */}
       <section className="hero-section container-fluid px-lg-5 px-5 py-5">
@@ -264,10 +261,9 @@ const LandingPage = () => {
             </p>
 
             <ul>
-              <li>✔ QR Verification</li>
               <li>✔ Instant Download</li>
               <li>✔ Employer Verification</li>
-              <li>✔ Lifetime Valid</li>
+              <li>✔ Lifetime Validity</li>
             </ul>
           </div>
         </div>

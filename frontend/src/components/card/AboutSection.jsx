@@ -1,3 +1,4 @@
+import React from "react";
 import "./AboutSection.css";
 
 function AboutSection() {
@@ -20,10 +21,10 @@ function AboutSection() {
             </div>
 
             <div className="experience-card">
-              <h2>25+</h2>
+              <h2>100%</h2>
               <div>
-                <h5>YEARS EXPERIENCE</h5>
-                <p>JUST ACHIEVED</p>
+                <h5>VERIFIED SKILLS</h5>
+                <p>CERTIFIED EXCELLENCE</p>
               </div>
             </div>
 
@@ -39,24 +40,23 @@ function AboutSection() {
           <div className="col-lg-6 text-white">
 
             <span className="about-badge">
-              About Us
+              About Ujjwal
             </span>
 
             <h1 className="hero-title">
-              Welcome to the <span>Online</span>
+              Welcome to <span>Ujjwal Radiant Vision</span>
               <br />
-              Assessment Center
+              Skill Assessment Portal
             </h1>
 
             <div className="quote-box">
-              25+ Contrary to popular belief, Lorem Ipsum is not simply random
-              text roots in a piece of classical Latin literature from 45 BC
+              Empowering individuals and institutions with accurate, real-time skill evaluation and tamper-proof certificate verification.
             </div>
 
             <ul className="feature-list">
-              <li>✔ Lorem Ipsum is simply dummy</li>
-              <li>✔ Explore a variety of fresh educational teach</li>
-              <li>✔ Lorem Ipsum is simply dummy text of</li>
+              <li>✔ Skill evaluations & Assessment tests</li>
+              <li>✔ Instant automated certificate generation upon passing</li>
+              <li>✔ Seamless verification portal for examiners & recruiters</li>
             </ul>
 
           </div>

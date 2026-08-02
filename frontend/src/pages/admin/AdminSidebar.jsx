@@ -33,10 +33,15 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
       label: "Assignment History",
       icon: "fa-solid fa-clock-rotate-left",
     },
-     {
+    {
       path: "/admin/registered-candidate",
       label: "Candidates",
       icon: "fa-solid fa-user",
+    },
+    {
+      path: "/admin/profile",
+      label: "Profile",
+      icon: "fa-solid fa-user-shield",
     },
   ];
 

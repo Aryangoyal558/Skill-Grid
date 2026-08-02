@@ -36,6 +36,7 @@ import EditQuestion from "./pages/examiner/EditQuestion";
 import ViewResults from "./pages/examiner/ViewResult";
 import SelectSkill from "./pages/examiner/SelectSkill";
 import Analytics from "./pages/examiner/Analytics";
+import ExaminerProfile from "./pages/examiner/Profile";
 
 // Admin Pages & Layout
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -44,6 +45,7 @@ import AssignAssignment from "./pages/admin/AssignAssignment";
 import AssignmentHistory from "./pages/admin/AssignmentHistory";
 import PublishedAssessments from "./pages/admin/PublishedAssessments";
 import RegisteredCandidates from "./pages/admin/RegisteredCandidates";
+import AdminProfile from "./pages/admin/Profile";
 
 import VerifyCertificate from "./pages/VerifyCertificate";
 
@@ -91,6 +93,7 @@ function App() {
             <Route path="submissions" element={<ExaminerSubmissions />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="profile" element={<ExaminerProfile />} />
           </Route>
         </Route>
 
@@ -103,6 +106,7 @@ function App() {
             <Route path="assignment-history" element={<AssignmentHistory />} />
             <Route path="published-assessments" element={<PublishedAssessments />} />
             <Route path="registered-candidate" element={<RegisteredCandidates />} />
+            <Route path="profile" element={<AdminProfile />} />
           </Route>
         </Route>
 

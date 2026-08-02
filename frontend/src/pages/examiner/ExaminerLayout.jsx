@@ -87,6 +87,18 @@ const ExaminerLayout = () => {
             <i className="fa-solid fa-chart-line"></i>
             <span>Analytics</span>
           </NavLink>
+
+          {/* Added Profile Link */}
+          <NavLink
+            to="/examiner/profile"
+            className={({ isActive }) =>
+              `custom-nav-link ${isActive ? "active" : ""}`
+            }
+            onClick={() => setSidebarOpen(false)}
+          >
+            <i className="fa-solid fa-user-tie"></i>
+            <span>Profile</span>
+          </NavLink>
         </nav>
 
         <div className="custom-spacer"></div>
