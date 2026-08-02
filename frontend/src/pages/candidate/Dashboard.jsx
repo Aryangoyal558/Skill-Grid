@@ -23,7 +23,7 @@ const Dashboard = () => {
         "http://localhost:8081/candidate/dashboard",
         {
           withCredentials: true,
-        }
+        },
       );
       setUser(userRes.data.user);
 
@@ -76,7 +76,9 @@ const Dashboard = () => {
           {/* Account Status */}
           <div className="kpi-card card-yellow">
             <div className="kpi-info">
-              <span className="kpi-value">{user.isVerified ? "100%" : "50%"}</span>
+              <span className="kpi-value">
+                {user.isVerified ? "100%" : "50%"}
+              </span>
               <span className="kpi-label">ACCOUNT STATUS</span>
             </div>
             <div className="kpi-icon-wrap">
@@ -124,7 +126,8 @@ const Dashboard = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3>
-                <i className="fas fa-id-card card-title-icon"></i> Profile Information
+                <i className="fas fa-id-card card-title-icon"></i> Profile
+                Information
               </h3>
               <div className="card-controls">
                 <span>+</span>
@@ -143,11 +146,15 @@ const Dashboard = () => {
                 </div>
                 <div className="profile-detail-item">
                   <span className="detail-label">Phone Number</span>
-                  <span className="detail-value">{user.phone_no || "Not Added"}</span>
+                  <span className="detail-value">
+                    {user.phone_no || "Not Added"}
+                  </span>
                 </div>
                 <div className="profile-detail-item">
                   <span className="detail-label">Verification</span>
-                  <span className={`detail-value ${user.isVerified ? "status-verified" : "status-pending"}`}>
+                  <span
+                    className={`detail-value ${user.isVerified ? "status-verified" : "status-pending"}`}
+                  >
                     {user.isVerified ? "VERIFIED ✓" : "PENDING"}
                   </span>
                 </div>
@@ -159,7 +166,8 @@ const Dashboard = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3>
-                <i className="fas fa-laptop-code card-title-icon"></i> Available Skill Assessments
+                <i className="fas fa-laptop-code card-title-icon"></i> Available
+                Skill Assessments
               </h3>
               <div className="card-controls">
                 <span>+</span>
@@ -167,7 +175,9 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="card-body">
-              <p className="card-subtext mb-3">Select an assessment to evaluate your skills.</p>
+              <p className="card-subtext mb-3">
+                Select an assessment to evaluate your skills.
+              </p>
               {assessments.length === 0 ? (
                 <div className="empty-state">
                   <i className="fas fa-inbox"></i>
@@ -182,7 +192,8 @@ const Dashboard = () => {
                         <div>
                           <strong className="item-title">{test.title}</strong>
                           <p className="item-subtext">
-                            Duration: {test.timeLimit} mins | Pass Score: {test.minPassScore}%
+                            Duration: {test.timeLimit} mins | Pass Score:{" "}
+                            {test.minPassScore}%
                           </p>
                         </div>
                       </div>
@@ -213,7 +224,8 @@ const Dashboard = () => {
           <div className="dashboard-card">
             <div className="card-header">
               <h3>
-                <i className="fas fa-graduation-cap card-title-icon"></i> Earned Certificates
+                <i className="fas fa-graduation-cap card-title-icon"></i> Earned
+                Certificates
               </h3>
               <div className="card-controls">
                 <span>+</span>
@@ -224,7 +236,10 @@ const Dashboard = () => {
               {certificates.length === 0 ? (
                 <div className="empty-state">
                   <i className="fas fa-award"></i>
-                  <p>No certificates earned yet. Pass an assessment to issue your digital certificate.</p>
+                  <p>
+                    No certificates earned yet. Pass an assessment to issue your
+                    digital certificate.
+                  </p>
                 </div>
               ) : (
                 <div className="certificates-grid">
@@ -233,9 +248,12 @@ const Dashboard = () => {
                       <div className="cert-card-left">
                         <i className="fas fa-certificate cert-icon"></i>
                         <div>
-                          <strong className="cert-title">{cert.assessmentTitle}</strong>
+                          <strong className="cert-title">
+                            {cert.assessmentTitle}
+                          </strong>
                           <p className="cert-date">
-                            Issued: {new Date(cert.issueDate).toLocaleDateString()}
+                            Issued:{" "}
+                            {new Date(cert.issueDate).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
