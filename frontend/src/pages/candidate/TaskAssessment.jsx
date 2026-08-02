@@ -16,6 +16,28 @@ const TakeAssessment = () => {
   const [timeLeft, setTimeLeft] = useState(30 * 60);
 
   useEffect(() => {
+    sessionStorage.setItem("examInProgress", "true");
+    sessionStorage.setItem("currentAssessmentId", assessmentId);
+
+    return () => {
+      sessionStorage.removeItem("examInProgress");
+      sessionStorage.removeItem("currentAssessmentId");
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleSubmitEvent = () => {
+      submitExam(true);
+    };
+
+    window.addEventListener("submitExam", handleSubmitEvent);
+
+    return () => {
+      window.removeEventListener("submitExam", handleSubmitEvent);
+    };
+  }, []);
+
+  useEffect(() => {
     // Push current page into history
     window.history.pushState(null, "", window.location.href);
 
@@ -114,7 +136,14 @@ const TakeAssessment = () => {
       );
 
       alert(res.data.message || "Assessment Submitted!");
-      navigate("/candidate/dashboard");
+      const redirect =
+        sessionStorage.getItem("redirectAfterSubmit") || "/candidate/dashboard";
+
+      sessionStorage.removeItem("redirectAfterSubmit");
+      sessionStorage.removeItem("examInProgress");
+      sessionStorage.removeItem("currentAssessmentId");
+
+      navigate(redirect);
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     }

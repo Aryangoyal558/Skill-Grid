@@ -20,15 +20,37 @@ const CandidateLayout = () => {
     navigate("/login");
   };
 
+  const handleNavClick = (path) => {
+    const examRunning = sessionStorage.getItem("examInProgress");
+
+    if (!examRunning) {
+      navigate(path);
+      setMobileOpen(false);
+      return;
+    }
+
+    const ok = window.confirm(
+      "Your assessment is currently in progress.\n\nDo you want to submit the exam before leaving?",
+    );
+
+    if (!ok) return;
+
+    // Save destination page
+    sessionStorage.setItem("redirectAfterSubmit", path);
+
+    // Tell TakeAssessment to submit
+    window.dispatchEvent(new Event("submitExam"));
+  };
+
   const isActive = (path) => location.pathname === path;
 
   return (
     <div className="custom-dashboard-layout">
       {/* Mobile Drawer Overlay */}
       {mobileOpen && (
-        <div 
-          className="custom-sidebar-overlay" 
-          onClick={() => setMobileOpen(false)} 
+        <div
+          className="custom-sidebar-overlay"
+          onClick={() => setMobileOpen(false)}
         />
       )}
 
@@ -42,10 +64,7 @@ const CandidateLayout = () => {
           {/* Dashboard */}
           <div
             className={`custom-nav-link ${isActive("/candidate/dashboard") ? "active" : ""}`}
-            onClick={() => {
-              navigate("/candidate/dashboard");
-              setMobileOpen(false);
-            }}
+            onClick={() => handleNavClick("/candidate/dashboard")}
             title="Dashboard"
           >
             <i className="fas fa-home"></i>
@@ -55,10 +74,7 @@ const CandidateLayout = () => {
           {/* Assessments */}
           <div
             className={`custom-nav-link ${isActive("/candidate/assessment") ? "active" : ""}`}
-            onClick={() => {
-              navigate("/candidate/assessment");
-              setMobileOpen(false);
-            }}
+            onClick={() => handleNavClick("/candidate/assessment")}
             title="Assessments"
           >
             <i className="fas fa-laptop-code"></i>
@@ -68,10 +84,7 @@ const CandidateLayout = () => {
           {/* Results */}
           <div
             className={`custom-nav-link ${isActive("/candidate/results") ? "active" : ""}`}
-            onClick={() => {
-              navigate("/candidate/results");
-              setMobileOpen(false);
-            }}
+            onClick={() => handleNavClick("/candidate/results")}
             title="Results"
           >
             <i className="fas fa-chart-line"></i>
@@ -81,10 +94,7 @@ const CandidateLayout = () => {
           {/* Certificates */}
           <div
             className={`custom-nav-link ${isActive("/candidate/certificate") ? "active" : ""}`}
-            onClick={() => {
-              navigate("/candidate/certificate");
-              setMobileOpen(false);
-            }}
+            onClick={() => handleNavClick("/candidate/certificate")}
             title="Certificates"
           >
             <i className="fas fa-certificate"></i>
@@ -94,10 +104,7 @@ const CandidateLayout = () => {
           {/* Profile */}
           <div
             className={`custom-nav-link ${isActive("/candidate/profile") ? "active" : ""}`}
-            onClick={() => {
-              navigate("/candidate/profile");
-              setMobileOpen(false);
-            }}
+            onClick={() => handleNavClick("/candidate/profile")}
             title="Profile"
           >
             <i className="fas fa-user"></i>
@@ -108,7 +115,28 @@ const CandidateLayout = () => {
         <div className="custom-spacer"></div>
 
         {/* Logout Button */}
-        <button className="custom-logout-btn" onClick={logout} title="Logout">
+        <button
+          className="custom-logout-btn"
+          onClick={() => {
+            const examRunning = sessionStorage.getItem("examInProgress");
+
+            if (!examRunning) {
+              logout();
+              return;
+            }
+
+            const ok = window.confirm(
+              "Your assessment is currently in progress.\n\nDo you want to submit the exam before logging out?",
+            );
+
+            if (!ok) return;
+
+            sessionStorage.setItem("redirectAfterSubmit", "/login");
+
+            window.dispatchEvent(new Event("submitExam"));
+          }}
+          title="Logout"
+        >
           <i className="fas fa-sign-out-alt"></i>
           <span>LOGOUT</span>
         </button>
@@ -118,7 +146,7 @@ const CandidateLayout = () => {
       <main className="custom-dashboard-main">
         {/* Mobile Header Bar Toggle */}
         <div className="mobile-header-bar">
-          <button 
+          <button
             className="mobile-hamburger-btn"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
