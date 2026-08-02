@@ -16,6 +16,30 @@ const TakeAssessment = () => {
   const [timeLeft, setTimeLeft] = useState(30 * 60);
 
   useEffect(() => {
+    // Push current page into history
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      const confirmSubmit = window.confirm(
+        "Your assessment is in progress.\n\nDo you want to submit the exam before leaving?",
+      );
+
+      if (confirmSubmit) {
+        submitExam(true);
+      } else {
+        // Stay on the page
+        window.history.pushState(null, "", window.location.href);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
     loadQuestions();
   }, []);
 
@@ -40,7 +64,7 @@ const TakeAssessment = () => {
         `http://localhost:8081/question/assessment/${assessmentId}`,
         {
           withCredentials: true,
-        }
+        },
       );
 
       setQuestions(res.data.questions || []);
@@ -86,7 +110,7 @@ const TakeAssessment = () => {
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
       alert(res.data.message || "Assessment Submitted!");
@@ -129,7 +153,9 @@ const TakeAssessment = () => {
       <header className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
         <div>
           <h1 className="fw-bold fs-2 m-0 text-white d-flex align-items-center gap-2">
-            <span>Online <span className="theme-gradient-text">Assessment</span></span>
+            <span>
+              Online <span className="theme-gradient-text">Assessment</span>
+            </span>
             <span className="fs-3">📝</span>
           </h1>
           <p className="subtext-gray m-0 mt-1 fs-6">
@@ -172,8 +198,8 @@ const TakeAssessment = () => {
                         isCurrent
                           ? "palette-current"
                           : isAnswered
-                          ? "palette-answered"
-                          : "palette-unanswered"
+                            ? "palette-answered"
+                            : "palette-unanswered"
                       }`}
                       onClick={() => setCurrentQuestion(index)}
                     >
