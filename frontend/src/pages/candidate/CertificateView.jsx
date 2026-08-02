@@ -91,10 +91,7 @@ const CertificateView = () => {
               Complete and pass an assessment to issue your verified digital
               credentials.
             </p>
-            <Link
-              to="/candidate/assessments"
-              className="cyber-btn primary-glow"
-            >
+            <Link to="/candidate/assessment" className="cyber-btn primary-glow">
               Explore Assessments <i className="fas fa-arrow-right ms-2"></i>
             </Link>
           </div>
