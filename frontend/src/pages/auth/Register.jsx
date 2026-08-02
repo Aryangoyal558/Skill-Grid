@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/Register.css";
-import stud from "../../assets/stud.png";
-import examine from "../../assets/examine.png";
-import admi from "../../assets/admi.png";
-import about_1 from "../../assets/about_1.png";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -28,14 +24,6 @@ const Register = () => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleRoleChange = (selectedRole) => {
-    setRole(selectedRole);
-    setFormData((prev) => ({
-      ...prev,
-      roles: selectedRole,
     }));
   };
 
@@ -65,7 +53,7 @@ const Register = () => {
       const response = await axios.post(
         import.meta.env.VITE_SERVER_SIGNUP_URL,
         formData,
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
       alert(response.data.message);
@@ -91,125 +79,124 @@ const Register = () => {
     }
   };
 
-  const getRoleDisplayName = () => {
-    switch (role) {
-      case "candidate":
-        return "Candidate";
-      case "examiner":
-        return "Examiner";
-      case "admin":
-        return "Administrator";
-      default:
-        return "Candidate";
-    }
-  };
-
   return (
-    <div>
-      <div className="container text-center d-flex justify-content-center align-items-center">
-        <div className="row">
-          <div className="col-md-12">
+    <div className="register-page">
+      <div className="main-container">
+        <div className="form-box">
+          <div className="brand-header">
             <h2>Welcome to Ujwal Radiant Vision</h2>
             <p className="subtitle">
-              Choose your role to access your personalized dashboard.
+              Create an account to get started with your journey.
             </p>
           </div>
-        </div>
-      </div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="form-box">
-              <div className="form-title">Sign Up</div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="input-group mb-2">
-                  <input
-                    type="text"
-                    name="fullname"
-                    placeholder="Full Name"
-                    value={formData.fullname}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+          <div className="form-title">Sign Up</div>
 
-                <div className="input-group mb-2">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="input-group mb-2">
-                  <input
-                    type="phone"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="input-group mb-2">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-
-                <div className="input-group mb-2">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    placeholder="Confirm Password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-
-                <div style={{ textAlign: "center", marginTop: "15px" }}>
-                  <p style={{ fontSize: "12px", marginBottom: "10px" }}>
-                    By signing up you agree to our Terms & Conditions.
-                  </p>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="signup-button"
-                  >
-                    {loading ? "Creating Account..." : "SIGN UP"}
-                  </button>
-
-                  <div style={{ marginTop: "10px" }}>
-                    Already have an account? <Link to="/login">Login</Link>
-                  </div>
-                </div>
-              </form>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group">
+              <label className="input-label" htmlFor="fullname">Full Name</label>
+              <input
+                id="fullname"
+                type="text"
+                name="fullname"
+                placeholder="Full Name"
+                value={formData.fullname}
+                onChange={handleChange}
+                required
+              />
             </div>
-          </div>
+
+            <div className="input-group">
+              <label className="input-label" htmlFor="email">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label className="input-label" htmlFor="phone">Phone Number</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="input-group password-group">
+              <label className="input-label" htmlFor="password">Password</label>
+              <div className="input-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+
+            <div className="input-group password-group">
+              <label className="input-label" htmlFor="confirmPassword">Confirm Password</label>
+              <div className="input-wrapper">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+            </div>
+
+            <div className="terms-wrapper">
+              <p className="terms-text">
+                By signing up you agree to our Terms &amp; Conditions.
+              </p>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="signup-btn"
+              >
+                {loading ? "Creating Account..." : "SIGN UP"}
+              </button>
+
+              <div className="register-link">
+                Already have an account?{" "}
+                <Link to="/login">
+                  Login
+                </Link>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

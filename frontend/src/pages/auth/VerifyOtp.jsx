@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./css/ForgotPassword.css";
 
 const VerifyOtp = () => {
   const navigate = useNavigate();
@@ -46,10 +47,10 @@ const VerifyOtp = () => {
           <p className="subtitle">
             Enter the OTP sent to
             <br />
-            <strong>{email}</strong>
+            <strong className="highlight-email">{email}</strong>
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="auth-form">
             <div className="input-group">
               <input
                 type="text"
@@ -65,9 +66,11 @@ const VerifyOtp = () => {
             </button>
           </form>
 
-          <Link to="/forgot-password" className="back-link">
-            ← Back
-          </Link>
+          <div className="back-to-login">
+            <Link to="/forgot-password" className="back-link">
+              &larr; Back
+            </Link>
+          </div>
         </div>
       </div>
     </div>

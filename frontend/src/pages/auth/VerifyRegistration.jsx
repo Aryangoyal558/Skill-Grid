@@ -17,7 +17,7 @@ const VerifyRegistration = () => {
     return (
       <div className="register-page">
         <div className="main-container">
-          <div className="content-box">
+          <div className="form-box">
             <h2>Email Not Found</h2>
 
             <p className="subtitle">
@@ -26,19 +26,12 @@ const VerifyRegistration = () => {
               Please register again or login.
             </p>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                justifyContent: "center",
-                marginTop: "25px",
-              }}
-            >
-              <Link to="/register" className="action-btn signup-btn">
+            <div className="action-buttons-group">
+              <Link to="/register" className="action-btn signup-btn" style={{ textDecoration: 'none' }}>
                 Register
               </Link>
 
-              <Link to="/login" className="action-btn signup-btn">
+              <Link to="/login" className="action-btn signup-btn" style={{ textDecoration: 'none' }}>
                 Login
               </Link>
             </div>
@@ -103,21 +96,14 @@ const VerifyRegistration = () => {
   return (
     <div className="register-page">
       <div className="main-container">
-        <div className="content-box">
+        <div className="form-box">
           <h2>Email Verification</h2>
 
           <p className="subtitle">We've sent a 6-digit verification code to</p>
 
-          <h3
-            style={{
-              color: "#2563eb",
-              marginBottom: "25px",
-            }}
-          >
-            {email}
-          </h3>
+          <h3 className="email-heading">{email}</h3>
 
-          <form onSubmit={handleVerify}>
+          <form onSubmit={handleVerify} className="auth-form">
             <div className="input-group">
               <input
                 type="text"
@@ -125,59 +111,35 @@ const VerifyRegistration = () => {
                 value={otp}
                 maxLength={6}
                 onChange={(e) => setOtp(e.target.value)}
+                className="otp-center-input"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className="action-btn signup-btn"
+              className="signup-btn"
               disabled={loading}
             >
               {loading ? "Verifying..." : "Verify Email"}
             </button>
           </form>
 
-          <div
-            style={{
-              marginTop: "20px",
-              textAlign: "center",
-            }}
-          >
+          <div className="resend-wrapper">
             Didn't receive the OTP?
             <button
               type="button"
               onClick={resendOTP}
               disabled={resending}
-              style={{
-                border: "none",
-                background: "none",
-                color: "#2563eb",
-                cursor: "pointer",
-                marginLeft: "8px",
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
+              className="resend-btn"
             >
               {resending ? "Sending..." : "Resend OTP"}
             </button>
           </div>
 
-          <div
-            style={{
-              marginTop: "25px",
-              textAlign: "center",
-            }}
-          >
-            <Link
-              to="/login"
-              style={{
-                color: "#2563eb",
-                textDecoration: "none",
-                fontWeight: "600",
-              }}
-            >
-              ← Back to Login
+          <div className="back-to-login">
+            <Link to="/login" className="back-link">
+              &larr; Back to Login
             </Link>
           </div>
         </div>

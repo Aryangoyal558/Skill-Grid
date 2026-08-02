@@ -26,10 +26,11 @@ const ForgotPassword = () => {
     <div className="forgot-password-page">
       <div className="main-container">
         <div className="form-box">
-          <h2 className="text-white">Forgot Password?</h2>
+          <h2>Forgot Password?</h2>
+
           <p className="subtitle">
-            Enter the email address associated with your account and we'll
-            send you a link to reset your password.
+            Enter the email address associated with your account and we'll send you
+            a link to reset your password.
           </p>
 
           {isSubmitted ? (
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
               If an account exists for {email}, a reset link has been sent.
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="auth-form">
               <div className="input-group">
                 <input
                   type="email"
@@ -50,15 +51,18 @@ const ForgotPassword = () => {
                   required
                 />
               </div>
+
               <button type="submit" className="action-btn">
                 Send Reset Link
               </button>
             </form>
           )}
 
-          <Link to="/login" className="back-link">
-            &larr; Back to Login
-          </Link>
+          <div className="back-to-login">
+            <Link to="/login" className="back-link">
+              &larr; Back to Login
+            </Link>
+          </div>
         </div>
       </div>
     </div>

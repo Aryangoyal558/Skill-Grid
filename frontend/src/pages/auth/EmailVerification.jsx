@@ -46,11 +46,11 @@ const EmailVerification = () => {
                     ) : (
                         <>
                             <p className="subtitle">
-                                We've sent a 6-digit verification code to <span>{userEmail}</span>. Please enter it below to confirm your account.
+                                We've sent a 6-digit verification code to <span className="highlight-email">{userEmail}</span>. Please enter it below to confirm your account.
                             </p>
 
-                            <form onSubmit={handleSubmit}>
-                                <div className="code-input-group">
+                            <form onSubmit={handleSubmit} className="auth-form">
+                                <div className="code-input-group input-group">
                                     <input 
                                         type="text" 
                                         name="code" 
@@ -58,6 +58,7 @@ const EmailVerification = () => {
                                         maxLength="6"
                                         value={code}
                                         onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                                        className="otp-input"
                                         required 
                                     />
                                 </div>

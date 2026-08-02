@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./css/ForgotPassword.css";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -67,53 +68,61 @@ const ResetPassword = () => {
           <h2>Reset Password</h2>
           <p className="subtitle">Enter your new password.</p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="input-group">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="New Password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group password-group">
+              <label className="input-label" htmlFor="password">New Password</label>
+              <div className="input-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="New Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
 
-            <div className="input-group">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? "Hide" : "Show"}
-              </button>
+            <div className="input-group password-group">
+              <label className="input-label" htmlFor="confirmPassword">Confirm Password</label>
+              <div className="input-wrapper">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
 
-            <button className="action-btn" disabled={loading}>
+            <button type="submit" className="action-btn" disabled={loading}>
               {loading ? "Updating..." : "Reset Password"}
             </button>
           </form>
 
-          <Link to="/login" className="back-link">
-            ← Back to Login
-          </Link>
+          <div className="back-to-login">
+            <Link to="/login" className="back-link">
+              &larr; Back to Login
+            </Link>
+          </div>
         </div>
       </div>
     </div>
